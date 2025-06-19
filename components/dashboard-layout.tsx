@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils"
 import AIChatbot from "@/components/ai-chatbot"
 import QuickActions from "./quick-actions"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 const navigation = [
   { name: "My Dashboard", href: "/dashboard", icon: Home },
@@ -52,6 +53,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
+  const [manageWidgetsOpen, setManageWidgetsOpen] = useState(false)
 
   const Sidebar = ({ mobile = false }) => (
     <div className={cn("flex flex-col", mobile ? "h-full" : "h-screen")} style={{ backgroundColor: "#FFFFFF" }}>
@@ -153,14 +155,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <header className="border-b px-6 py-4" style={{ backgroundColor: "#FFFFFF", borderColor: "#E6EBED" }}>
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end gap-2">
             <TooltipProvider>
               <div className="flex gap-2">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 transition text-sm font-medium text-primary border border-transparent relative overflow-hidden" style={{ background: '#fff' }} aria-label="Schedule Call">
-                      <span className="absolute inset-0 rounded-md pointer-events-none" style={{ border: '2px solid transparent', background: 'linear-gradient(135deg, #1E9ADF 0%, #063852 100%)', WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMaskComposite: 'xor', maskComposite: 'exclude' }}></span>
-                      <Calendar className="h-5 w-5 text-blue-600" />
+                    <button className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 transition text-sm font-medium text-primary" style={{ backgroundColor: '#E6F3FF' }} aria-label="Schedule Call">
+                      <Calendar className="h-4 w-4 text-blue-600" />
                       <span className="hidden md:inline">Schedule Call</span>
                     </button>
                   </TooltipTrigger>
@@ -168,9 +169,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 transition text-sm font-medium text-primary border border-transparent relative overflow-hidden" style={{ background: '#fff' }} aria-label="Submit Request">
-                      <span className="absolute inset-0 rounded-md pointer-events-none" style={{ border: '2px solid transparent', background: 'linear-gradient(135deg, #1E9ADF 0%, #063852 100%)', WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMaskComposite: 'xor', maskComposite: 'exclude' }}></span>
-                      <FileText className="h-5 w-5 text-blue-600" />
+                    <button className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 transition text-sm font-medium text-primary" style={{ backgroundColor: '#E6F3FF' }} aria-label="Submit Request">
+                      <FileText className="h-4 w-4 text-blue-600" />
                       <span className="hidden md:inline">Submit Request</span>
                     </button>
                   </TooltipTrigger>
@@ -178,9 +178,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 transition text-sm font-medium text-primary border border-transparent relative overflow-hidden" style={{ background: '#fff' }} aria-label="Ask Question">
-                      <span className="absolute inset-0 rounded-md pointer-events-none" style={{ border: '2px solid transparent', background: 'linear-gradient(135deg, #1E9ADF 0%, #063852 100%)', WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMaskComposite: 'xor', maskComposite: 'exclude' }}></span>
-                      <MessageSquare className="h-5 w-5 text-blue-600" />
+                    <button className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 transition text-sm font-medium text-primary" style={{ backgroundColor: '#E6F3FF' }} aria-label="Ask Question">
+                      <MessageSquare className="h-4 w-4 text-blue-600" />
                       <span className="hidden md:inline">Ask Question</span>
                     </button>
                   </TooltipTrigger>
@@ -188,6 +187,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </Tooltip>
               </div>
             </TooltipProvider>
+            <Dialog open={manageWidgetsOpen} onOpenChange={setManageWidgetsOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2 text-sm">
+                  <Settings className="h-4 w-4" />
+                  Manage widgets
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Manage Widgets</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 text-center text-gray-500">Widget management coming soon...</div>
+              </DialogContent>
+            </Dialog>
           </div>
         </header>
 

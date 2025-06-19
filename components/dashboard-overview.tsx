@@ -1,3 +1,4 @@
+'use client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -5,6 +6,8 @@ import { Calendar, Clock, FileText, FolderOpen, MessageSquare, TrendingUp, MoreH
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import QuickActions from "./quick-actions"
+import { useState } from "react"
+import { addDays, format, isSameDay } from "date-fns"
 
 // Add SVG icons for Zoom and Google Meet at the top of the file
 const ZoomIcon = () => (
@@ -99,6 +102,30 @@ const financialTeam = [
     phone: "(555) 345-6789",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
   },
+  {
+    id: 4,
+    name: "Sarah Johnson",
+    role: "Estate Planner",
+    email: "sarah.johnson@cresset.com",
+    phone: "(555) 456-7890",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face",
+  },
+  {
+    id: 5,
+    name: "Michael Torres",
+    role: "Insurance Specialist",
+    email: "michael.torres@cresset.com",
+    phone: "(555) 567-8901",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=40&h=40&fit=crop&crop=face",
+  },
+  {
+    id: 6,
+    name: "Jennifer Lee",
+    role: "Client Service Associate",
+    email: "jennifer.lee@cresset.com",
+    phone: "(555) 678-9012",
+    avatar: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=40&h=40&fit=crop&crop=face",
+  },
 ];
 
 // Add planningAreas array at the top
@@ -145,7 +172,50 @@ const planningAreas = [
   },
 ];
 
+// Add this array at the top, before the component
+const meetings = [
+  {
+    id: 1,
+    title: "Quarterly Review",
+    type: "Video Call",
+    description: "Q2 progress review and Q3 planning",
+    date: "2024-06-20T14:00:00",
+    link: "https://zoom.us/j/1234567890",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=16&h=16&fit=crop&crop=face",
+    participant: "Sarah Johnson",
+    duration: "1 hour"
+  },
+  {
+    id: 2,
+    title: "Estate Planning Session",
+    type: "In-Person",
+    description: "Review updated estate planning documents",
+    date: "2024-06-25T10:00:00",
+    link: "#",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=16&h=16&fit=crop&crop=face",
+    participant: "Michael Torres",
+    duration: "45 min"
+  },
+  {
+    id: 3,
+    title: "Portfolio Review",
+    type: "Video Call",
+    description: "Monthly investment performance review",
+    date: "2024-06-28T15:00:00",
+    link: "https://meet.google.com/abc-defg-hij",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=16&h=16&fit=crop&crop=face",
+    participant: "Jennifer Liu",
+    duration: "30 min"
+  }
+]
+
 export default function DashboardOverview() {
+  const [selectedDate, setSelectedDate] = useState(new Date())
+  // Generate a week strip centered on today
+  const weekDates = Array.from({ length: 5 }, (_, i) => addDays(selectedDate, i - 2))
+  // Filter meetings by selected date
+  const filteredMeetings = meetings.filter(mtg => isSameDay(new Date(mtg.date), selectedDate))
+
   return (
     <TooltipProvider>
       <div className="space-y-6">
@@ -415,16 +485,16 @@ export default function DashboardOverview() {
                 Track your progress across key service areas
               </CardDescription>
             </div>
-            <Button variant="outline" size="sm" className="mt-2 md:mt-0">
-              View Details
+            <Button variant="outline" size="sm" className="mt-2 md:mt-0 text-xs h-8">
+              View All
             </Button>
           </CardHeader>
-          <CardContent>
+          <CardContent className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {planningAreas.map((area) => (
                 <div key={area.id} className="bg-background rounded-lg border border-gray-100 p-6 shadow-sm flex flex-col justify-between h-full">
                   <div className="flex items-start justify-between mb-2">
-                    <div className="font-semibold text-base md:text-lg" style={{ color: '#063852' }}>{area.name}</div>
+                    <div className="font-semibold text-sm" style={{ color: '#063852' }}>{area.name}</div>
                     <Button variant="ghost" size="icon" className="h-6 w-6 p-0"><MoreHorizontal className="h-4 w-4" style={{ color: '#636466' }} /></Button>
                   </div>
                   <div className="mb-4">
@@ -463,7 +533,7 @@ export default function DashboardOverview() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {financialTeam.map((member) => (
-                <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg border hover:shadow transition-all duration-200" style={{ backgroundColor: '#F9FAFB', borderColor: '#E5E7EB' }}>
+                <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg border hover:shadow transition-all duration-200" style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E7EB' }}>
                   <img src={member.avatar} alt={member.name} className="w-10 h-10 rounded-full object-cover" />
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-sm" style={{ color: '#063852' }}>{member.name}</div>
