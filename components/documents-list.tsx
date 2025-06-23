@@ -1,60 +1,102 @@
-import { Button } from "@/components/ui/button"
-import { Download, FileText } from "lucide-react"
+"use client"
 
-const groupedDocuments = [
+export interface Document {
+  id: string
+  name: string
+  uploadedAt: string
+  size: string
+  uploadedBy: string
+  uploadedByAvatar: string
+  status: string
+  lastAccessed: string
+  category: string
+  description: string
+  tags?: string[]
+}
+
+// Sample documents data for reuse
+export const sampleDocuments: Document[] = [
   {
-    section: "Personal Documents",
-    documents: [
-      { name: "Government ID.pdf", uploadedAt: "2025-05-05", size: "1.2 MB" },
-      { name: "Tax Return.pdf", uploadedAt: "2025-05-05", size: "3.4 MB" },
-      { name: "Estate Planning Documents.pdf", uploadedAt: "2025-05-07", size: "2.8 MB" },
-    ],
-    action: <Button variant="outline" className="ml-auto">Open in Box</Button>,
+    id: "1",
+    name: "Government ID.pdf",
+    uploadedAt: "2025-01-15",
+    size: "1.2 MB",
+    uploadedBy: "John Smith",
+    uploadedByAvatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    status: "Verified",
+    lastAccessed: "2 hours ago",
+    category: "Personal ID",
+    description: "Driver's license and passport documents",
+    tags: ["ID", "Passport"]
   },
   {
-    section: "Investment Documents",
-    documents: [
-      { name: "Investment Statement.pdf", uploadedAt: "2025-05-06", size: "2.2 MB" },
-      { name: "Retirement Account Statements.pdf", uploadedAt: "2025-05-06", size: "1.9 MB" },
-    ],
+    id: "2",
+    name: "Financial Statement Q4 2024.pdf",
+    uploadedAt: "2025-01-10",
+    size: "2.8 MB",
+    uploadedBy: "Sarah Johnson",
+    uploadedByAvatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    status: "Complete",
+    lastAccessed: "1 day ago",
+    category: "Financial Reports",
+    description: "Quarterly financial statement and analysis",
+    tags: ["Financial", "Q4", "2024"]
   },
   {
-    section: "Property & Assets",
-    documents: [
-      { name: "Real Estate Documents.pdf", uploadedAt: "2025-05-07", size: "4.5 MB" },
-      { name: "Business Ownership Documents.pdf", uploadedAt: "2025-05-07", size: "3.8 MB" },
-    ],
+    id: "3",
+    name: "Estate Planning Documents.zip",
+    uploadedAt: "2025-01-08",
+    size: "5.1 MB",
+    uploadedBy: "Michael Chen",
+    uploadedByAvatar: "https://randomuser.me/api/portraits/men/67.jpg",
+    status: "Pending Review",
+    lastAccessed: "3 days ago",
+    category: "Estate Planning",
+    description: "Will, trust documents, and beneficiary forms",
+    tags: ["Estate", "Legal", "Trust"]
   },
+  {
+    id: "4",
+    name: "Tax Returns 2024.pdf",
+    uploadedAt: "2025-01-05",
+    size: "3.4 MB",
+    uploadedBy: "Emily Davis",
+    uploadedByAvatar: "https://randomuser.me/api/portraits/women/23.jpg",
+    status: "Verified",
+    lastAccessed: "1 week ago",
+    category: "Tax Documents",
+    description: "Personal and business tax returns for 2024",
+    tags: ["Tax", "2024", "Returns"]
+  },
+  {
+    id: "5",
+    name: "Investment Portfolio Summary.xlsx",
+    uploadedAt: "2025-01-03",
+    size: "1.7 MB",
+    uploadedBy: "David Wilson",
+    uploadedByAvatar: "https://randomuser.me/api/portraits/men/89.jpg",
+    status: "Complete",
+    lastAccessed: "2 days ago",
+    category: "Investment Reports",
+    description: "Current portfolio allocation and performance metrics",
+    tags: ["Investment", "Portfolio", "Performance"]
+  },
+  {
+    id: "6",
+    name: "Insurance Policies.pdf",
+    uploadedAt: "2024-12-28",
+    size: "4.2 MB",
+    uploadedBy: "Lisa Brown",
+    uploadedByAvatar: "https://randomuser.me/api/portraits/women/56.jpg",
+    status: "Verified",
+    lastAccessed: "5 days ago",
+    category: "Insurance",
+    description: "Life, health, and property insurance policies",
+    tags: ["Insurance", "Life", "Health", "Property"]
+  }
 ]
 
+// This component is now deprecated - use DocumentsManager instead
 export default function DocumentsList() {
-  return (
-    <div className="space-y-10">
-      {groupedDocuments.map((group, idx) => (
-        <div key={group.section}>
-          <div className="flex items-center mb-8">
-            <h2 className="text-xl font-semibold text-primary mr-4">{group.section}</h2>
-            {group.action}
-          </div>
-          <div className="divide-y divide-gray-100 bg-white rounded-lg">
-            {group.documents.map((doc, i) => (
-              <div key={doc.name} className="flex items-center py-4 px-2 hover:bg-gray-50">
-                <FileText className="h-6 w-6 text-blue-400 mr-4 flex-shrink-0" aria-hidden="true" />
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-base text-gray-900 truncate">{doc.name}</div>
-                  <div className="text-sm text-muted-foreground mt-0.5">
-                    Uploaded: {new Date(doc.uploadedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} &nbsp; {doc.size}
-                  </div>
-                </div>
-                <Button variant="ghost" size="icon" aria-label="Download document">
-                  <Download className="h-5 w-5" aria-hidden="true" />
-                </Button>
-              </div>
-            ))}
-          </div>
-          {idx < groupedDocuments.length - 1 && <hr className="my-8 border-gray-200" />}
-        </div>
-      ))}
-    </div>
-  )
+  return null
 }

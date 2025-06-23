@@ -2,17 +2,17 @@
 
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Users, UserCheck, Calendar, Phone, Mail, Building, Plus, Search, Heart, Table as TableIcon, LayoutGrid } from "lucide-react"
+import { Users, UserCheck, Calendar, Phone, Mail, Building, Search, Heart, Table as TableIcon, LayoutGrid } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
 
 export default function PeopleList() {
-  const [activeTab, setActiveTab] = useState("family")
+  const [activeTab, setActiveTab] = useState("internal")
   const [searchTerm, setSearchTerm] = useState("")
   const [view, setView] = useState<'card' | 'table'>('card')
 
@@ -27,7 +27,7 @@ export default function PeopleList() {
       phone: "(555) 123-4567",
       birthday: "March 15",
       interests: ["Travel", "Photography"],
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
     {
       id: "2",
@@ -38,7 +38,7 @@ export default function PeopleList() {
       phone: "(555) 234-5678",
       birthday: "July 22",
       interests: ["Sports", "Gaming"],
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
     {
       id: "3",
@@ -49,7 +49,7 @@ export default function PeopleList() {
       phone: "(555) 345-6789",
       birthday: "December 8",
       interests: ["Art", "Music"],
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
   ]
 
@@ -65,7 +65,7 @@ export default function PeopleList() {
       specialties: ["Financial Planning", "Estate Planning"],
       currentClients: 12,
       availability: "available",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
     {
       id: "2",
@@ -77,7 +77,7 @@ export default function PeopleList() {
       specialties: ["Investment Management", "Risk Assessment"],
       currentClients: 8,
       availability: "busy",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1519340333755-c1aa5571fd46?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
     {
       id: "3",
@@ -89,7 +89,7 @@ export default function PeopleList() {
       specialties: ["Tax Planning", "Estate Planning"],
       currentClients: 15,
       availability: "available",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
     {
       id: "4",
@@ -101,7 +101,7 @@ export default function PeopleList() {
       specialties: ["Insurance", "Asset Protection"],
       currentClients: 10,
       availability: "away",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
   ]
 
@@ -117,7 +117,7 @@ export default function PeopleList() {
       specialties: ["Tax Preparation", "Business Accounting"],
       relationship: "Preferred Partner",
       lastContact: "2 days ago",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
     {
       id: "2",
@@ -129,7 +129,7 @@ export default function PeopleList() {
       specialties: ["Estate Planning", "Trust Administration"],
       relationship: "Trusted Partner",
       lastContact: "1 week ago",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1519340333755-c1aa5571fd46?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
     {
       id: "3",
@@ -141,7 +141,7 @@ export default function PeopleList() {
       specialties: ["M&A", "Business Valuation"],
       relationship: "Strategic Partner",
       lastContact: "3 days ago",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
     {
       id: "4",
@@ -153,7 +153,7 @@ export default function PeopleList() {
       specialties: ["Life Insurance", "Disability Insurance"],
       relationship: "Preferred Partner",
       lastContact: "5 days ago",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&w=128&h=128&facepad=2",
     },
   ]
 
@@ -183,112 +183,117 @@ export default function PeopleList() {
     }
   }
 
+  const handleAddPeople = () => {
+    // TODO: Implement add people functionality
+    console.log('Add people clicked')
+  }
+
   return (
     <div className="space-y-6">
-      {/* People Tabs */}
+      {/* Unified Header Row (clean, consistent controls) */}
+      <div className="flex flex-col gap-4 mb-4 w-full">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 w-full">
+          {/* Left: Tabs only */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
+              <TabsList className="flex items-center bg-white p-0 shadow-none border-none h-10">
+                <TabsTrigger value="internal" className="data-[state=active]:bg-blue-50 px-4 h-10 rounded-md text-sm font-medium" style={{ color: "#063852" }}>
+                  <UserCheck className="h-4 w-4 mr-2" />Internal Team
+                </TabsTrigger>
+                <TabsTrigger value="family" className="data-[state=active]:bg-blue-50 px-4 h-10 rounded-md text-sm font-medium" style={{ color: "#063852" }}>
+                  <Heart className="h-4 w-4 mr-2" />Family
+                </TabsTrigger>
+                <TabsTrigger value="external" className="data-[state=active]:bg-blue-50 px-4 h-10 rounded-md text-sm font-medium" style={{ color: "#063852" }}>
+                  <Building className="h-4 w-4 mr-2" />External Partner
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+          {/* Right: Search, View Toggle, Add People Button */}
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <div className="relative w-full max-w-xs">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" style={{ color: "#636466" }} />
+              <Input
+                placeholder={
+                  activeTab === "family" ? "Search family members..." :
+                  activeTab === "internal" ? "Search team members..." :
+                  "Search partners..."
+                }
+                className="pl-10 w-full h-10 rounded-md text-sm font-medium border border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-100"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ background: "#fff" }}
+              />
+            </div>
+            <ToggleGroup
+              type="single"
+              value={view}
+              onValueChange={(val) => val && setView(val as 'card' | 'table')}
+              className="rounded-md p-0 h-10 min-w-[84px] flex border-0 bg-white shadow-none"
+              size="sm"
+              variant="outline"
+              aria-label="Switch people view"
+            >
+              <ToggleGroupItem value="card" aria-label="Card view" className="h-10 px-3 rounded-md text-sm font-medium border-0 focus:bg-blue-50">
+                <LayoutGrid className="h-4 w-4" />
+                <span className="sr-only">Card</span>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="table" aria-label="Table view" className="h-10 px-3 rounded-md text-sm font-medium border-0 focus:bg-blue-50">
+                <TableIcon className="h-4 w-4" />
+                <span className="sr-only">Table</span>
+              </ToggleGroupItem>
+            </ToggleGroup>
+            <Button 
+              className="ml-2 h-10 px-4 text-sm font-medium text-white transition-colors" 
+              style={{ backgroundColor: "#1E9ADF" }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#1A8BC7"}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#1E9ADF"}
+              onClick={handleAddPeople}
+            >
+              + Add People
+            </Button>
+          </div>
+        </div>
+      </div>
+      {/* Tabs Content (no header/tabs here) */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList
-          className="flex justify-between items-center w-full"
-          style={{ backgroundColor: "#FFFFFF", borderColor: "#E6EBED" }}
-        >
-          <div className="flex">
-            <TabsTrigger value="family" className="data-[state=active]:bg-blue-50" style={{ color: "#063852" }}>
-              <Heart className="h-4 w-4 mr-2" />
-              Family
-            </TabsTrigger>
-            <TabsTrigger value="internal" className="data-[state=active]:bg-blue-50" style={{ color: "#063852" }}>
-              <UserCheck className="h-4 w-4 mr-2" />
-              Internal Team
-            </TabsTrigger>
-            <TabsTrigger value="external" className="data-[state=active]:bg-blue-50" style={{ color: "#063852" }}>
-              <Building className="h-4 w-4 mr-2" />
-              External Partner
-            </TabsTrigger>
-          </div>
-          <div className="flex gap-2">
-            <Button size="sm" variant="outline" style={{ borderColor: "#1E9ADF", color: "#1E9ADF" }}>
-              <Calendar className="h-4 w-4 mr-2" />
-              Schedule Meeting
-            </Button>
-            <Button size="sm" style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Contact
-            </Button>
-          </div>
-        </TabsList>
-
         {/* Family Tab */}
-        <TabsContent value="family" className="mt-6">
+        <TabsContent value="family" className="mt-0">
           <Card style={{ backgroundColor: "#FFFFFF", borderColor: "#E6EBED" }}>
-            <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex flex-col gap-1">
-                <CardTitle className="text-lg font-semibold" style={{ color: "#063852" }}>Family Members</CardTitle>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" style={{ color: "#636466" }} />
-                  <Input
-                    placeholder="Search family members..."
-                    className="pl-10 w-64"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{ borderColor: "#E6EBED" }}
-                  />
-                </div>
-                <ToggleGroup
-                  type="single"
-                  value={view}
-                  onValueChange={(val) => val && setView(val as 'card' | 'table')}
-                  className="bg-muted rounded-md p-1"
-                  size="sm"
-                  variant="outline"
-                  aria-label="Switch people view"
-                >
-                  <ToggleGroupItem value="card" aria-label="Card view">
-                    <LayoutGrid className="h-4 w-4" />
-                    <span className="sr-only">Card</span>
-                  </ToggleGroupItem>
-                  <ToggleGroupItem value="table" aria-label="Table view">
-                    <TableIcon className="h-4 w-4" />
-                    <span className="sr-only">Table</span>
-                  </ToggleGroupItem>
-                </ToggleGroup>
-              </div>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               {view === 'card' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {familyMembers.map((member) => (
                     <Card
                       key={member.id}
-                      className="shadow-sm border hover:shadow-md transition-all duration-200"
+                      className="shadow-sm border hover:shadow-md transition-all duration-200 h-full"
                       style={{ backgroundColor: "#FFFFFF", borderColor: "#F1F3F4" }}
                     >
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <Avatar className="h-16 w-16">
+                      <CardContent className="p-6 h-full flex flex-col">
+                        <div className="flex items-start gap-4 flex-1">
+                          <Avatar className="h-16 w-16 flex-shrink-0">
                             <AvatarImage src={member.avatar || "/placeholder.svg"} />
                             <AvatarFallback style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>
                               {member.name.split(" ").map((n) => n[0]).join("")}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-2">
-                              <h3 className="font-medium" style={{ color: "#063852" }}>{member.name}</h3>
-                              <Badge variant="outline" style={{ color: "#636466" }}>{member.relationship}</Badge>
+                              <h3 className="font-medium truncate" style={{ color: "#063852" }}>{member.name}</h3>
+                              <Badge variant="outline" style={{ color: "#636466" }} className="flex-shrink-0">{member.relationship}</Badge>
                             </div>
-                            <p className="text-sm mb-3" style={{ color: "#636466" }}>{member.role}</p>
+                            <p className="text-sm mb-1" style={{ color: "#636466" }}>{member.role}</p>
                             <div className="space-y-2 text-sm">
                               <div className="flex items-center gap-2">
-                                <Mail className="h-3 w-3" style={{ color: "#636466" }} />
-                                <a href={`mailto:${member.email}`} className="hover:underline" style={{ color: "#1E9ADF" }}>{member.email}</a>
+                                <Mail className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
+                                <a href={`mailto:${member.email}`} className="hover:underline truncate" style={{ color: "#1E9ADF" }}>{member.email}</a>
                               </div>
                               <div className="flex items-center gap-2">
-                                <Phone className="h-3 w-3" style={{ color: "#636466" }} />
+                                <Phone className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
                                 <a href={`tel:${member.phone}`} style={{ color: "#063852" }}>{member.phone}</a>
                               </div>
                               <div className="flex items-center gap-2">
-                                <Calendar className="h-3 w-3" style={{ color: "#636466" }} />
+                                <Calendar className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
                                 <span style={{ color: "#063852" }}>Birthday: {member.birthday}</span>
                               </div>
                             </div>
@@ -300,12 +305,6 @@ export default function PeopleList() {
                                 ))}
                               </div>
                             </div>
-                            <div className="flex gap-2 mt-4">
-                              <Button size="sm" variant="outline" className="flex-1" style={{ borderColor: "#1E9ADF", color: "#1E9ADF" }}>
-                                <Calendar className="h-3 w-3 mr-1" />
-                                Schedule
-                              </Button>
-                            </div>
                           </div>
                         </div>
                       </CardContent>
@@ -313,110 +312,77 @@ export default function PeopleList() {
                   ))}
                 </div>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Relationship</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Birthday</TableHead>
-                      <TableHead>Interests</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {familyMembers.map((member) => (
-                      <TableRow key={member.id}>
-                        <TableCell className="font-medium">{member.name}</TableCell>
-                        <TableCell>{member.relationship}</TableCell>
-                        <TableCell>{member.role}</TableCell>
-                        <TableCell><a href={`mailto:${member.email}`} className="text-blue-600 hover:underline">{member.email}</a></TableCell>
-                        <TableCell><a href={`tel:${member.phone}`} className="text-blue-600 hover:underline">{member.phone}</a></TableCell>
-                        <TableCell>{member.birthday}</TableCell>
-                        <TableCell>{member.interests.join(", ")}</TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Relationship</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Phone</TableHead>
+                        <TableHead>Birthday</TableHead>
+                        <TableHead>Interests</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {familyMembers.map((member) => (
+                        <TableRow key={member.id}>
+                          <TableCell className="font-medium">{member.name}</TableCell>
+                          <TableCell>{member.relationship}</TableCell>
+                          <TableCell>{member.role}</TableCell>
+                          <TableCell><a href={`mailto:${member.email}`} className="text-blue-600 hover:underline">{member.email}</a></TableCell>
+                          <TableCell><a href={`tel:${member.phone}`} className="text-blue-600 hover:underline">{member.phone}</a></TableCell>
+                          <TableCell>{member.birthday}</TableCell>
+                          <TableCell>{member.interests.join(", ")}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               )}
             </CardContent>
           </Card>
         </TabsContent>
 
         {/* Internal Team Tab */}
-        <TabsContent value="internal" className="mt-6">
+        <TabsContent value="internal" className="mt-0">
           <Card style={{ backgroundColor: "#FFFFFF", borderColor: "#E6EBED" }}>
-            <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex flex-col gap-1">
-                <CardTitle style={{ color: "#063852" }}>Internal Team</CardTitle>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" style={{ color: "#636466" }} />
-                  <Input
-                    placeholder="Search team members..."
-                    className="pl-10 w-64"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{ borderColor: "#E6EBED" }}
-                  />
-                </div>
-                <ToggleGroup
-                  type="single"
-                  value={view}
-                  onValueChange={(val) => val && setView(val as 'card' | 'table')}
-                  className="bg-muted rounded-md p-1"
-                  size="sm"
-                  variant="outline"
-                  aria-label="Switch people view"
-                >
-                  <ToggleGroupItem value="card" aria-label="Card view">
-                    <LayoutGrid className="h-4 w-4" />
-                    <span className="sr-only">Card</span>
-                  </ToggleGroupItem>
-                  <ToggleGroupItem value="table" aria-label="Table view">
-                    <TableIcon className="h-4 w-4" />
-                    <span className="sr-only">Table</span>
-                  </ToggleGroupItem>
-                </ToggleGroup>
-              </div>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               {view === 'card' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {internalTeam.map((member) => (
                     <Card
                       key={member.id}
-                      className="shadow-sm border hover:shadow-md transition-all duration-200"
+                      className="shadow-sm border hover:shadow-md transition-all duration-200 h-full"
                       style={{ backgroundColor: "#FFFFFF", borderColor: "#F1F3F4" }}
                     >
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <Avatar className="h-16 w-16">
+                      <CardContent className="p-6 h-full flex flex-col">
+                        <div className="flex items-start gap-4 flex-1">
+                          <Avatar className="h-16 w-16 flex-shrink-0">
                             <AvatarImage src={member.avatar || "/placeholder.svg"} />
                             <AvatarFallback style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>
                               {member.name.split(" ").map((n) => n[0]).join("")}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-2">
-                              <h3 className="font-medium" style={{ color: "#063852" }}>{member.name}</h3>
-                              {getAvailabilityBadge(member.availability)}
+                              <h3 className="font-medium truncate" style={{ color: "#063852" }}>{member.name}</h3>
+                              <div className="flex-shrink-0">{getAvailabilityBadge(member.availability)}</div>
                             </div>
                             <p className="text-sm mb-1" style={{ color: "#636466" }}>{member.role}</p>
                             <p className="text-sm mb-3" style={{ color: "#636466" }}>{member.department}</p>
                             <div className="space-y-2 text-sm">
                               <div className="flex items-center gap-2">
-                                <Mail className="h-3 w-3" style={{ color: "#636466" }} />
-                                <a href={`mailto:${member.email}`} className="hover:underline" style={{ color: "#1E9ADF" }}>{member.email}</a>
+                                <Mail className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
+                                <a href={`mailto:${member.email}`} className="hover:underline truncate" style={{ color: "#1E9ADF" }}>{member.email}</a>
                               </div>
                               <div className="flex items-center gap-2">
-                                <Phone className="h-3 w-3" style={{ color: "#636466" }} />
+                                <Phone className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
                                 <a href={`tel:${member.phone}`} style={{ color: "#063852" }}>{member.phone}</a>
                               </div>
                               <div className="flex items-center gap-2">
-                                <Users className="h-3 w-3" style={{ color: "#636466" }} />
+                                <Users className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
                                 <span style={{ color: "#063852" }}>{member.currentClients} active clients</span>
                               </div>
                             </div>
@@ -428,12 +394,6 @@ export default function PeopleList() {
                                 ))}
                               </div>
                             </div>
-                            <div className="flex gap-2 mt-4">
-                              <Button size="sm" variant="outline" className="flex-1" style={{ borderColor: "#1E9ADF", color: "#1E9ADF" }}>
-                                <Calendar className="h-3 w-3 mr-1" />
-                                Schedule
-                              </Button>
-                            </div>
                           </div>
                         </div>
                       </CardContent>
@@ -441,105 +401,79 @@ export default function PeopleList() {
                   ))}
                 </div>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Department</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Clients</TableHead>
-                      <TableHead>Specialties</TableHead>
-                      <TableHead>Availability</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {internalTeam.map((member) => (
-                      <TableRow key={member.id}>
-                        <TableCell className="font-medium">{member.name}</TableCell>
-                        <TableCell>{member.role}</TableCell>
-                        <TableCell>{member.department}</TableCell>
-                        <TableCell><a href={`mailto:${member.email}`} className="text-blue-600 hover:underline">{member.email}</a></TableCell>
-                        <TableCell><a href={`tel:${member.phone}`} className="text-blue-600 hover:underline">{member.phone}</a></TableCell>
-                        <TableCell>{member.currentClients}</TableCell>
-                        <TableCell>{member.specialties.join(", ")}</TableCell>
-                        <TableCell>{member.availability}</TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Department</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Phone</TableHead>
+                        <TableHead>Active Clients</TableHead>
+                        <TableHead>Availability</TableHead>
+                        <TableHead>Specialties</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {internalTeam.map((member) => (
+                        <TableRow key={member.id}>
+                          <TableCell className="font-medium">{member.name}</TableCell>
+                          <TableCell>{member.role}</TableCell>
+                          <TableCell>{member.department}</TableCell>
+                          <TableCell><a href={`mailto:${member.email}`} className="text-blue-600 hover:underline">{member.email}</a></TableCell>
+                          <TableCell><a href={`tel:${member.phone}`} className="text-blue-600 hover:underline">{member.phone}</a></TableCell>
+                          <TableCell>{member.currentClients}</TableCell>
+                          <TableCell>{getAvailabilityBadge(member.availability)}</TableCell>
+                          <TableCell>{member.specialties.join(", ")}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               )}
             </CardContent>
           </Card>
         </TabsContent>
 
         {/* External Partners Tab */}
-        <TabsContent value="external" className="mt-6">
+        <TabsContent value="external" className="mt-0">
           <Card style={{ backgroundColor: "#FFFFFF", borderColor: "#E6EBED" }}>
-            <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex flex-col gap-1">
-                <CardTitle style={{ color: "#063852" }}>External Partners</CardTitle>
-              </div>
-              <div className="flex items-center gap-4">
-                <ToggleGroup
-                  type="single"
-                  value={view}
-                  onValueChange={(val) => val && setView(val as 'card' | 'table')}
-                  className="bg-muted rounded-md p-1"
-                  size="sm"
-                  variant="outline"
-                  aria-label="Switch people view"
-                >
-                  <ToggleGroupItem value="card" aria-label="Card view">
-                    <LayoutGrid className="h-4 w-4" />
-                    <span className="sr-only">Card</span>
-                  </ToggleGroupItem>
-                  <ToggleGroupItem value="table" aria-label="Table view">
-                    <TableIcon className="h-4 w-4" />
-                    <span className="sr-only">Table</span>
-                  </ToggleGroupItem>
-                </ToggleGroup>
-              </div>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               {view === 'card' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {externalPartners.map((partner) => (
                     <Card
                       key={partner.id}
-                      className="shadow-sm border hover:shadow-md transition-all duration-200"
+                      className="shadow-sm border hover:shadow-md transition-all duration-200 h-full"
                       style={{ backgroundColor: "#FFFFFF", borderColor: "#F1F3F4" }}
                     >
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <Avatar className="h-16 w-16">
+                      <CardContent className="p-6 h-full flex flex-col">
+                        <div className="flex items-start gap-4 flex-1">
+                          <Avatar className="h-16 w-16 flex-shrink-0">
                             <AvatarImage src={partner.avatar || "/placeholder.svg"} />
                             <AvatarFallback style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>
                               {partner.name.split(" ").map((n) => n[0]).join("")}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-2">
-                              <h3 className="font-medium" style={{ color: "#063852" }}>{partner.name}</h3>
-                              {getRelationshipBadge(partner.relationship)}
+                              <h3 className="font-medium truncate" style={{ color: "#063852" }}>{partner.name}</h3>
+                              <div className="flex-shrink-0">{getRelationshipBadge(partner.relationship)}</div>
                             </div>
                             <p className="text-sm mb-1" style={{ color: "#636466" }}>{partner.role}</p>
-                            <p className="text-sm mb-3 flex items-center gap-1" style={{ color: "#636466" }}>
-                              <Building className="h-3 w-3" />
-                              {partner.company}
-                            </p>
+                            <p className="text-sm mb-3" style={{ color: "#636466" }}>{partner.company}</p>
                             <div className="space-y-2 text-sm">
                               <div className="flex items-center gap-2">
-                                <Mail className="h-3 w-3" style={{ color: "#636466" }} />
-                                <a href={`mailto:${partner.email}`} className="hover:underline" style={{ color: "#1E9ADF" }}>{partner.email}</a>
+                                <Mail className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
+                                <a href={`mailto:${partner.email}`} className="hover:underline truncate" style={{ color: "#1E9ADF" }}>{partner.email}</a>
                               </div>
                               <div className="flex items-center gap-2">
-                                <Phone className="h-3 w-3" style={{ color: "#636466" }} />
+                                <Phone className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
                                 <a href={`tel:${partner.phone}`} style={{ color: "#063852" }}>{partner.phone}</a>
                               </div>
                               <div className="flex items-center gap-2">
-                                <Calendar className="h-3 w-3" style={{ color: "#636466" }} />
+                                <Calendar className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
                                 <span style={{ color: "#063852" }}>Last contact: {partner.lastContact}</span>
                               </div>
                             </div>
@@ -547,15 +481,9 @@ export default function PeopleList() {
                               <p className="text-xs mb-1" style={{ color: "#636466" }}>Specialties:</p>
                               <div className="flex flex-wrap gap-1">
                                 {partner.specialties.map((specialty, i) => (
-                                  <span key={i} className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: "#F3E8FF", color: "#7C3AED" }}>{specialty}</span>
+                                  <span key={i} className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: "#E6F3FF", color: "#1E9ADF" }}>{specialty}</span>
                                 ))}
                               </div>
-                            </div>
-                            <div className="flex gap-2 mt-4">
-                              <Button size="sm" variant="outline" className="flex-1" style={{ borderColor: "#1E9ADF", color: "#1E9ADF" }}>
-                                <Calendar className="h-3 w-3 mr-1" />
-                                Schedule
-                              </Button>
                             </div>
                           </div>
                         </div>
@@ -564,34 +492,36 @@ export default function PeopleList() {
                   ))}
                 </div>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Company</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Last Contact</TableHead>
-                      <TableHead>Specialties</TableHead>
-                      <TableHead>Relationship</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {externalPartners.map((partner) => (
-                      <TableRow key={partner.id}>
-                        <TableCell className="font-medium">{partner.name}</TableCell>
-                        <TableCell>{partner.role}</TableCell>
-                        <TableCell>{partner.company}</TableCell>
-                        <TableCell><a href={`mailto:${partner.email}`} className="text-blue-600 hover:underline">{partner.email}</a></TableCell>
-                        <TableCell><a href={`tel:${partner.phone}`} className="text-blue-600 hover:underline">{partner.phone}</a></TableCell>
-                        <TableCell>{partner.lastContact}</TableCell>
-                        <TableCell>{partner.specialties.join(", ")}</TableCell>
-                        <TableCell>{partner.relationship}</TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Company</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Phone</TableHead>
+                        <TableHead>Relationship</TableHead>
+                        <TableHead>Last Contact</TableHead>
+                        <TableHead>Specialties</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {externalPartners.map((partner) => (
+                        <TableRow key={partner.id}>
+                          <TableCell className="font-medium">{partner.name}</TableCell>
+                          <TableCell>{partner.role}</TableCell>
+                          <TableCell>{partner.company}</TableCell>
+                          <TableCell><a href={`mailto:${partner.email}`} className="text-blue-600 hover:underline">{partner.email}</a></TableCell>
+                          <TableCell><a href={`tel:${partner.phone}`} className="text-blue-600 hover:underline">{partner.phone}</a></TableCell>
+                          <TableCell>{getRelationshipBadge(partner.relationship)}</TableCell>
+                          <TableCell>{partner.lastContact}</TableCell>
+                          <TableCell>{partner.specialties.join(", ")}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               )}
             </CardContent>
           </Card>

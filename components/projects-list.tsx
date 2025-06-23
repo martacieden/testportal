@@ -13,8 +13,14 @@ import {
   DrawerDescription,
   DrawerClose
 } from "@/components/ui/drawer"
+import { Badge } from "@/components/ui/badge"
 
-export default function ProjectsList() {
+// Add prop type
+type ProjectsListProps = {
+  onProjectClick?: (id: string) => void;
+};
+
+export default function ProjectsList({ onProjectClick }: ProjectsListProps) {
   const [showPanel, setShowPanel] = useState(false)
 
   // Example project data for Estate Planning
@@ -80,7 +86,7 @@ export default function ProjectsList() {
           <div
             className="p-6 rounded-lg shadow-sm border cursor-pointer"
             style={{ backgroundColor: "#FFFFFF", borderColor: "#F1F3F4" }}
-            onClick={() => setShowPanel(true)}
+            onClick={() => onProjectClick?.("1")}
           >
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-lg font-semibold" style={{ color: "#063852" }}>

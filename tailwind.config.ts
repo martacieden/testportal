@@ -10,6 +10,11 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ['Arial', 'Helvetica', 'sans-serif'],
+  			helvetica: ['Helvetica', 'Arial', 'sans-serif'],
+  			arial: ['Arial', 'Helvetica', 'sans-serif'],
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

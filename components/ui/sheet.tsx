@@ -137,4 +137,6 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
+  sheetVariants,
+  SheetPrimitive
 }

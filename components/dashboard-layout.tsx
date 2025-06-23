@@ -35,15 +35,15 @@ import AIChatbot from "@/components/ai-chatbot"
 import QuickActions from "./quick-actions"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { WidgetProvider } from "@/lib/widget-context"
 
 const navigation = [
   { name: "My Dashboard", href: "/dashboard", icon: Home },
   { name: "Projects", href: "/dashboard/projects", icon: FolderOpen },
   { name: "People", href: "/dashboard/people", icon: Users },
-  { name: "Meetings", href: "/dashboard/meetings", icon: Calendar },
   { name: "Documents & Vault", href: "/dashboard/documents", icon: FileText },
   { name: "Reports", href: "/dashboard/reports", icon: BarChart3 },
-  { name: "Resources & Education", href: "/dashboard/resources", icon: BookOpen },
+  { name: "Resources", href: "/dashboard/resources", icon: BookOpen },
 ]
 
 interface DashboardLayoutProps {
@@ -138,80 +138,38 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   )
 
   return (
-    <div className="flex h-screen" style={{ backgroundColor: "#F8F9FA" }}>
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:flex lg:w-72 lg:flex-col lg:border-r" style={{ borderColor: "#E6EBED" }}>
-        <Sidebar />
-      </div>
+    <WidgetProvider>
+      <div className="flex h-screen" style={{ backgroundColor: "#F8F9FA" }}>
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:flex lg:w-72 lg:flex-col lg:border-r" style={{ borderColor: "#E6EBED" }}>
+          <Sidebar />
+        </div>
 
-      {/* Mobile Sidebar */}
-      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent side="left" className="p-0 w-72">
-          <Sidebar mobile />
-        </SheetContent>
-      </Sheet>
+        {/* Mobile Sidebar */}
+        <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+          <SheetContent side="left" className="p-0 w-72">
+            <Sidebar mobile />
+          </SheetContent>
+        </Sheet>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <header className="border-b px-6 py-4" style={{ backgroundColor: "#FFFFFF", borderColor: "#E6EBED" }}>
-          <div className="flex items-center justify-end gap-2">
-            <TooltipProvider>
-              <div className="flex gap-2">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 transition text-sm font-medium text-primary" style={{ backgroundColor: '#E6F3FF' }} aria-label="Schedule Call">
-                      <Calendar className="h-4 w-4 text-blue-600" />
-                      <span className="hidden md:inline">Schedule Call</span>
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>Schedule Call</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 transition text-sm font-medium text-primary" style={{ backgroundColor: '#E6F3FF' }} aria-label="Submit Request">
-                      <FileText className="h-4 w-4 text-blue-600" />
-                      <span className="hidden md:inline">Submit Request</span>
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>Submit Request</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 transition text-sm font-medium text-primary" style={{ backgroundColor: '#E6F3FF' }} aria-label="Ask Question">
-                      <MessageSquare className="h-4 w-4 text-blue-600" />
-                      <span className="hidden md:inline">Ask Question</span>
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>Ask Question</TooltipContent>
-                </Tooltip>
-              </div>
-            </TooltipProvider>
-            <Dialog open={manageWidgetsOpen} onOpenChange={setManageWidgetsOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2 text-sm">
-                  <Settings className="h-4 w-4" />
-                  Manage widgets
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Manage Widgets</DialogTitle>
-                </DialogHeader>
-                <div className="py-4 text-center text-gray-500">Widget management coming soon...</div>
-              </DialogContent>
-            </Dialog>
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Header with Quick Actions - Scrolls with content */}
+          <div className="w-full" style={{ backgroundColor: "#F8F9FA" }}>
+            <div className="w-full">
+              <QuickActions />
+            </div>
           </div>
-        </header>
+          
+          {/* Page Content with Consistent Padding */}
+          <main className="flex-1 overflow-auto page-content p-6" style={{ backgroundColor: "#F8F9FA" }}>
+            {children}
+          </main>
+        </div>
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-auto p-6" style={{ backgroundColor: "#F8F9FA" }}>
-          <div className="max-w-7xl mx-auto">{children}</div>
-        </main>
+        {/* AI Chatbot */}
+        <AIChatbot />
       </div>
-
-      {/* AI Chatbot */}
-      <AIChatbot />
-    </div>
+    </WidgetProvider>
   )
 }
