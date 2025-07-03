@@ -29,6 +29,10 @@ import {
   HelpCircle,
   BarChart3,
   MessageSquare,
+  Plus,
+  Bot,
+  Megaphone,
+  Building2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import AIChatbot from "@/components/ai-chatbot"
@@ -41,9 +45,12 @@ const navigation = [
   { name: "My Dashboard", href: "/dashboard", icon: Home },
   { name: "Projects", href: "/dashboard/projects", icon: FolderOpen },
   { name: "People", href: "/dashboard/people", icon: Users },
+  { name: "Messages", href: "/dashboard/messages", icon: MessageSquare },
   { name: "Documents & Vault", href: "/dashboard/documents", icon: FileText },
-  { name: "Reports", href: "/dashboard/reports", icon: BarChart3 },
+  { name: "My Assets", href: "/dashboard/objects", icon: Building2 },
   { name: "Resources", href: "/dashboard/resources", icon: BookOpen },
+  { name: "Announcements", href: "/dashboard/announcements", icon: Megaphone },
+  { name: "AI Chat", href: "/dashboard/ai-chat", icon: Bot },
 ]
 
 interface DashboardLayoutProps {
@@ -55,22 +62,32 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const [manageWidgetsOpen, setManageWidgetsOpen] = useState(false)
 
+  const handleSubmitRequest = () => {
+    // Handle submit request action
+    console.log('Submit Request clicked')
+    // You can open a modal, navigate to a form, etc.
+  }
+
   const Sidebar = ({ mobile = false }) => (
     <div className={cn("flex flex-col", mobile ? "h-full" : "h-screen")} style={{ backgroundColor: "#FFFFFF" }}>
-      <div className="flex h-16 items-center px-6" style={{ borderColor: "#E6EBED" }}>
+      <div className="flex h-12 items-center px-4" style={{ borderColor: "#E6EBED" }}>
         <div className="flex items-center space-x-3">
           <img src="/cresset-logo.svg" alt="Cresset" className="h-12 w-auto" />
         </div>
       </div>
-      <nav className="flex-1 px-4 py-6 space-y-1">
+      
+      <nav className="flex-1 px-4 py-3 space-y-2">
         {navigation.map((item) => {
-          const isActive = pathname === item.href
+          // Use exact match for dashboard home, and exact match or starts with for other pages
+          const isActive = item.href === "/dashboard" 
+            ? pathname === "/dashboard"
+            : pathname === item.href || pathname.startsWith(item.href + "/")
           return (
             <Link
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200",
+                "flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1",
                 isActive ? "text-white shadow-md" : "hover:shadow-sm",
                 isActive ? "" : "hover:bg-gray-50",
               )}
@@ -80,44 +97,44 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               }}
               onClick={() => mobile && setSidebarOpen(false)}
             >
-              <item.icon className="mr-3 h-5 w-5" />
-              <span>{item.name}</span>
+              <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
+              <span className="truncate">{item.name}</span>
             </Link>
           )
         })}
       </nav>
-      <div className="px-4 pb-2">
+      <div className="px-4 pb-3">
         <Link
           href="/dashboard/help"
-          className="flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-sm hover:bg-gray-50"
+          className="flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
           style={{ color: "#063852" }}
           onClick={() => mobile && setSidebarOpen(false)}
         >
-          <HelpCircle className="mr-3 h-5 w-5" />
-          <span>Help & Support</span>
+          <HelpCircle className="mr-3 h-5 w-5 flex-shrink-0" />
+          <span className="truncate">Help & Support</span>
         </Link>
       </div>
       <div className="border-t px-4 py-4" style={{ borderColor: "#E6EBED" }}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="w-full justify-start p-3 h-auto">
+            <Button variant="ghost" className="w-full justify-start p-3 h-auto hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
               <div className="flex items-center space-x-3">
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 flex-shrink-0">
                   <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
                   <AvatarFallback style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>JD</AvatarFallback>
                 </Avatar>
-                <div className="flex flex-col items-start">
-                  <p className="text-sm font-medium" style={{ color: "#063852" }}>
+                <div className="flex flex-col items-start min-w-0">
+                  <p className="text-sm font-medium truncate" style={{ color: "#063852" }}>
                     John Doe
                   </p>
-                  <p className="text-xs" style={{ color: "#636466" }}>
+                  <p className="text-xs truncate" style={{ color: "#636466" }}>
                     john.doe@example.com
                   </p>
                 </div>
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="start" forceMount>
+          <DropdownMenuContent className="w-48" align="start" forceMount>
             <DropdownMenuItem style={{ color: "#063852" }}>
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
@@ -141,13 +158,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <WidgetProvider>
       <div className="flex h-screen" style={{ backgroundColor: "#F8F9FA" }}>
         {/* Desktop Sidebar */}
-        <div className="hidden lg:flex lg:w-72 lg:flex-col lg:border-r" style={{ borderColor: "#E6EBED" }}>
+        <div className="hidden lg:flex lg:w-64 lg:flex-col lg:border-r" style={{ borderColor: "#E6EBED" }}>
           <Sidebar />
         </div>
 
         {/* Mobile Sidebar */}
         <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-          <SheetContent side="left" className="p-0 w-72">
+          <SheetContent side="left" className="p-0 w-64">
             <Sidebar mobile />
           </SheetContent>
         </Sheet>
@@ -157,7 +174,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           {/* Header with Quick Actions - Scrolls with content */}
           <div className="w-full" style={{ backgroundColor: "#F8F9FA" }}>
             <div className="w-full">
-              <QuickActions />
+              <QuickActions onMenuClick={() => setSidebarOpen(true)} onSubmitRequest={handleSubmitRequest} />
             </div>
           </div>
           
@@ -166,6 +183,25 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             {children}
           </main>
         </div>
+
+        {/* Floating Action Button (FAB) - Mobile Only - Hidden */}
+        {/* <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="brand"
+                size="lg"
+                className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg lg:hidden z-50"
+                onClick={handleSubmitRequest}
+              >
+                <Plus className="h-6 w-6" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              <p>Submit Request</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider> */}
 
         {/* AI Chatbot */}
         <AIChatbot />

@@ -233,7 +233,7 @@ export function ProjectOverviewWidget() {
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold" style={{ color: "#063852" }}>My Projects</CardTitle>
           <div className="flex items-center gap-2">
-            <div className="px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
+            <div className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium ml-2 md:ml-4">
               {projects.filter(p => p.status === "Active").length} Active
             </div>
           </div>
@@ -363,8 +363,9 @@ export function ProjectOverviewWidget() {
 
                       {/* Right Column - Tasks */}
                       <div>
-                        <h4 className="font-semibold mb-3" style={{ color: "#063852" }}>
+                        <h4 className="font-semibold mb-3 flex items-center" style={{ color: "#063852" }}>
                           Tasks ({project.tasksCompleted}/{project.totalTasks} completed)
+                          <span className="ml-2 md:ml-4"></span>
                         </h4>
                         <div className="space-y-2">
                           {project.tasks.map((task) => (

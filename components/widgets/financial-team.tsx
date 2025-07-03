@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
-import { MoreHorizontal, Search, Users } from "lucide-react"
+import { MoreHorizontal, Search, Users, Mail, Phone, Copy } from "lucide-react"
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 
 // Extended sample data for financial team
 const allFinancialTeamMembers = [
@@ -169,30 +170,28 @@ export function FinancialTeamWidget() {
   const filteredMembers = getFilteredMembers()
 
   return (
-    <Card className="shadow-sm border-0 h-full" style={{ backgroundColor: "#FFFFFF" }}>
+    <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
-            <CardTitle className="text-lg font-semibold" style={{ color: "#063852" }}>
-              My Team
-            </CardTitle>
-            <div className="px-2 py-1 rounded-full bg-green-100 text-green-800 text-sm font-medium">
+            <CardTitle>My Team</CardTitle>
+            <div className="px-2 py-1 rounded-full bg-status-success/10 text-status-success text-sm font-medium">
               {displayedMembers.length} Members
             </div>
           </div>
           <DropdownMenu open={showSettings} onOpenChange={setShowSettings}>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="small" className="h-8 w-8 p-0">
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-80 max-h-96 overflow-y-auto">
               <div className="p-3">
-                <div className="text-sm font-medium mb-3">Select Team Members</div>
+                <div className="text-sm font-medium mb-3 text-text-primary">Select Team Members</div>
                 
                 {/* Search Input */}
                 <div className="relative mb-3">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-neutral-400" />
                   <Input
                     placeholder="Search team members..."
                     value={searchQuery}
@@ -200,38 +199,52 @@ export function FinancialTeamWidget() {
                     className="pl-10"
                   />
                 </div>
-
-                {/* Quick Actions */}
+                
+                {/* Select All / Clear All */}
                 <div className="flex gap-2 mb-3">
-                  <Button 
-                    variant="outline" 
-                    size="small" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={handleSelectAll}
-                    className="flex-1 text-xs"
+                    className="flex-1"
                   >
                     Select All
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="small" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={handleClearAll}
-                    className="flex-1 text-xs"
+                    className="flex-1"
                   >
                     Clear All
                   </Button>
                 </div>
-
-                {/* Member List */}
-                <div className="space-y-2">
+                
+                {/* Team Members List */}
+                <div className="space-y-2 max-h-64 overflow-y-auto">
                   {filteredMembers.map((member) => (
-                    <div key={member.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50">
+                    <div
+                      key={member.id}
+                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-neutral-50"
+                    >
                       <Checkbox
-                        id={`member-${member.id}`}
                         checked={selectedMembers.includes(member.id)}
-                        onCheckedChange={(checked) => handleMemberToggle(member.id)}
+                        onCheckedChange={() => handleMemberToggle(member.id)}
                       />
-                      <div className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                        {member.name}
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <div className="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center">
+                          <span className="text-xs font-medium text-brand-primary">
+                            {member.name.split(' ').map(n => n[0]).join('')}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-text-primary truncate">
+                            {member.name}
+                          </p>
+                          <p className="text-sm font-medium text-text-primary truncate">
+                            {member.role}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -241,28 +254,72 @@ export function FinancialTeamWidget() {
           </DropdownMenu>
         </div>
       </CardHeader>
-      <CardContent>
-        {displayedMembers.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4">
-            {displayedMembers.slice(0, 4).map((member) => (
-              <div key={member.id} className="flex flex-col items-center text-center p-4 rounded-lg border hover:shadow transition-all duration-200" style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E7EB' }}>
-                <img src={member.avatar} alt={member.name} className="w-16 h-16 rounded-full object-cover mb-3" />
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-sm mb-1" style={{ color: '#063852' }}>{member.name}</div>
-                  <div className="text-xs mb-2" style={{ color: '#444444' }}>{member.role}</div>
-                  <a href={`mailto:${member.email}`} className="text-xs text-blue-600 hover:underline block mb-1">{member.email}</a>
-                  <a href={`tel:${member.phone.replace(/[^\d]/g, '')}`} className="text-xs" style={{ color: '#444444' }}>{member.phone}</a>
-                </div>
+      <CardContent className="space-y-3">
+        {displayedMembers.map((member) => (
+          <div
+            key={member.id}
+            className="flex items-center gap-3 p-3 rounded-lg border border-neutral-200 hover:border-neutral-300 transition-colors group"
+          >
+            <div className="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center">
+              <span className="text-sm font-medium text-brand-primary">
+                {member.name.split(' ').map(n => n[0]).join('')}
+              </span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-text-primary truncate">
+                {member.name}
+              </p>
+              <p className="text-sm font-medium text-text-primary truncate">
+                {member.role}
+              </p>
+              <div className="flex items-center gap-2 text-xs text-text-tertiary mt-1">
+                <Mail className="h-3 w-3" />
+                <span>{member.email}</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity"
+                        onClick={() => navigator.clipboard.writeText(member.email)}
+                        tabIndex={0}
+                        aria-label={`Copy email for ${member.name}`}
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Copy email</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
-            ))}
+              <div className="flex items-center gap-2 text-xs text-text-tertiary mt-1">
+                <Phone className="h-3 w-3" />
+                <span>{member.phone}</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity"
+                        onClick={() => navigator.clipboard.writeText(member.phone)}
+                        tabIndex={0}
+                        aria-label={`Copy phone for ${member.name}`}
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Copy phone</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Users className="h-4 w-4" />
+            </Button>
           </div>
-        ) : (
-          <div className="text-center py-8 text-gray-500">
-            <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">No team members selected</p>
-            <p className="text-xs" style={{ color: "#444444" }}>Use the menu above to customize your view</p>
-          </div>
-        )}
+        ))}
       </CardContent>
     </Card>
   )

@@ -45,11 +45,11 @@ export function UpcomingMeetingsWidget() {
   const getMeetingIcon = (type: string) => {
     switch (type) {
       case "Video Call":
-        return <Video className="h-4 w-4 text-blue-600" />
+        return <Video className="h-4 w-4 text-status-info" />
       case "In-Person":
-        return <MapPin className="h-4 w-4 text-green-600" />
+        return <MapPin className="h-4 w-4 text-status-success" />
       default:
-        return <Calendar className="h-4 w-4 text-gray-600" />
+        return <Calendar className="h-4 w-4 text-neutral-500" />
     }
   }
 
@@ -65,17 +65,15 @@ export function UpcomingMeetingsWidget() {
   }
 
   return (
-    <Card className="shadow-sm border-0 h-full" style={{ backgroundColor: "#FFFFFF" }}>
+    <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div>
-          <CardTitle className="text-lg font-semibold" style={{ color: "#063852" }}>
-            Upcoming Meetings
-          </CardTitle>
-          <CardDescription style={{ color: "#444444" }}>
+          <CardTitle>Upcoming Meetings</CardTitle>
+          <CardDescription>
             Scheduled meetings and appointments
           </CardDescription>
         </div>
-        <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+        <Badge variant="info">
           {meetings.length} scheduled
         </Badge>
       </CardHeader>
@@ -83,8 +81,7 @@ export function UpcomingMeetingsWidget() {
         {meetings.map((meeting) => (
           <div
             key={meeting.id}
-            className="flex items-start gap-3 p-3 rounded-lg border transition-all hover:shadow-sm"
-            style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E7EB' }}
+            className="flex items-start gap-3 p-3 rounded-lg border border-neutral-200 transition-all hover:shadow-sm"
           >
             <div className="mt-1">
               {getMeetingIcon(meeting.type)}
@@ -92,14 +89,14 @@ export function UpcomingMeetingsWidget() {
             
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-2 mb-1">
-                <h4 className="font-semibold text-sm" style={{ color: '#063852' }}>
+                <h4 className="font-semibold text-sm text-text-primary">
                   {meeting.title}
                 </h4>
-                <Badge variant="small" className="text-xs">
+                <Badge variant="sm">
                   {meeting.type}
                 </Badge>
               </div>
-              <p className="text-xs" style={{ color: '#444444' }}>
+              <p className="text-xs text-text-secondary">
                 {meeting.description}
               </p>
               <div className="flex items-center gap-2 mt-2">
@@ -109,17 +106,17 @@ export function UpcomingMeetingsWidget() {
                     {meeting.participant.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-xs" style={{ color: '#444444' }}>
+                <span className="text-xs text-text-secondary">
                   {formatMeetingTime(meeting.date)}
                 </span>
-                <span className="text-xs" style={{ color: '#444444' }}>
+                <span className="text-xs text-text-secondary">
                   • {meeting.duration}
                 </span>
               </div>
             </div>
             
             {meeting.link && meeting.link !== "#" && (
-              <Button size="small" variant="outline" className="text-xs" style={{ borderColor: "#1E9ADF", color: "#1E9ADF" }}>
+              <Button size="sm" variant="brandOutline" className="text-xs">
                 Join
               </Button>
             )}

@@ -9,6 +9,7 @@ import { CheckCircle, Clock, AlertCircle, CheckSquare, Square, Filter, Search } 
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Link from "next/link"
+import DashboardLayout from "@/components/dashboard-layout"
 
 // Sample data for action items
 const actionItems = [
@@ -151,183 +152,190 @@ export default function ActionsPage() {
   const completedCount = completedItems.size
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-[#063852]">My Action Queue</h1>
-          <p className="text-gray-600">Manage tasks and decisions requiring your attention</p>
+    <DashboardLayout>
+      <div className="space-y-6">
+        {/* Page Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-text-primary mb-2">
+            My Action Queue
+          </h1>
+          <p className="text-text-secondary">
+            Manage tasks and decisions requiring your attention
+          </p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Pending</p>
-                  <p className="text-2xl font-bold text-[#063852]">{pendingCount}</p>
-                </div>
-                <Clock className="h-8 w-8 text-blue-500" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Completed</p>
-                  <p className="text-2xl font-bold text-green-600">{completedCount}</p>
-                </div>
-                <CheckCircle className="h-8 w-8 text-green-500" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Total</p>
-                  <p className="text-2xl font-bold text-[#063852]">{actionItems.length}</p>
-                </div>
-                <AlertCircle className="h-8 w-8 text-orange-500" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filters */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input
-                    placeholder="Search actions..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <Select value={filter} onValueChange={setFilter}>
-                <SelectTrigger className="w-full md:w-48">
-                  <SelectValue placeholder="Filter by status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Items</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                <SelectTrigger className="w-full md:w-48">
-                  <SelectValue placeholder="Filter by priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Priorities</SelectItem>
-                  <SelectItem value="urgent">Urgent</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Action Items */}
-        <div className="grid gap-4">
-          {filteredItems.length === 0 ? (
+        <div className="flex flex-col gap-4">
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
-              <CardContent className="p-8 text-center">
-                <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No items found</h3>
-                <p className="text-gray-600">Try adjusting your filters or search terms</p>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Pending</p>
+                    <p className="text-2xl font-bold text-[#063852]">{pendingCount}</p>
+                  </div>
+                  <Clock className="h-8 w-8 text-blue-500" />
+                </div>
               </CardContent>
             </Card>
-          ) : (
-            filteredItems.map((item) => (
-              <Card key={item.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <button
-                      onClick={() => toggleCompletion(item.id)}
-                      className="mt-1 p-1 hover:bg-gray-100 rounded transition-colors"
-                    >
-                      {completedItems.has(item.id) ? (
-                        <CheckSquare className="h-5 w-5 text-green-600" />
-                      ) : (
-                        <Square className="h-5 w-5 text-gray-400" />
-                      )}
-                    </button>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4 mb-2">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            {getTypeIcon(item.type)}
-                            <h3 className={`font-semibold text-lg ${completedItems.has(item.id) ? 'line-through text-gray-500' : 'text-[#063852]'}`}>
-                              {item.title}
-                            </h3>
-                          </div>
-                          <p className={`text-sm ${completedItems.has(item.id) ? 'line-through text-gray-400' : 'text-gray-600'}`}>
-                            {item.description}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge
-                            variant="secondary"
-                            style={{
-                              backgroundColor: getPriorityColor(item.priority).bg,
-                              color: getPriorityColor(item.priority).text,
-                              borderColor: getPriorityColor(item.priority).border
-                            }}
-                          >
-                            {item.priority}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {item.category}
-                          </Badge>
-                        </div>
-                      </div>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Completed</p>
+                    <p className="text-2xl font-bold text-green-600">{completedCount}</p>
+                  </div>
+                  <CheckCircle className="h-8 w-8 text-green-500" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total</p>
+                    <p className="text-2xl font-bold text-[#063852]">{actionItems.length}</p>
+                  </div>
+                  <AlertCircle className="h-8 w-8 text-orange-500" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Filters */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      placeholder="Search actions..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+                <Select value={filter} onValueChange={setFilter}>
+                  <SelectTrigger className="w-full md:w-48">
+                    <SelectValue placeholder="Filter by status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Items</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                  <SelectTrigger className="w-full md:w-48">
+                    <SelectValue placeholder="Filter by priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Priorities</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Action Items */}
+          <div className="grid gap-4">
+            {filteredItems.length === 0 ? (
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No items found</h3>
+                  <p className="text-gray-600">Try adjusting your filters or search terms</p>
+                </CardContent>
+              </Card>
+            ) : (
+              filteredItems.map((item) => (
+                <Card key={item.id} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <button
+                        onClick={() => toggleCompletion(item.id)}
+                        className="mt-1 p-1 hover:bg-gray-100 rounded transition-colors"
+                      >
+                        {completedItems.has(item.id) ? (
+                          <CheckSquare className="h-5 w-5 text-green-600" />
+                        ) : (
+                          <Square className="h-5 w-5 text-gray-400" />
+                        )}
+                      </button>
                       
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
-                          <div className="flex items-center gap-2">
-                            <Avatar className="w-6 h-6">
-                              <AvatarImage src={item.assignedByAvatar} alt={item.assignedBy} />
-                              <AvatarFallback className="text-xs">
-                                {item.assignedBy.split(' ').map(n => n[0]).join('')}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span>Assigned by {item.assignedBy}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-4 mb-2">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              {getTypeIcon(item.type)}
+                              <h3 className={`font-semibold text-lg ${completedItems.has(item.id) ? 'line-through text-gray-500' : 'text-[#063852]'}`}>
+                                {item.title}
+                              </h3>
+                            </div>
+                            <p className={`text-sm ${completedItems.has(item.id) ? 'line-through text-gray-400' : 'text-gray-600'}`}>
+                              {item.description}
+                            </p>
                           </div>
-                          <span>Due: {new Date(item.dueDate).toLocaleDateString()}</span>
-                          <span>Est. time: {item.estimatedTime}</span>
+                          <div className="flex items-center gap-2">
+                            <Badge
+                              variant="secondary"
+                              style={{
+                                backgroundColor: getPriorityColor(item.priority).bg,
+                                color: getPriorityColor(item.priority).text,
+                                borderColor: getPriorityColor(item.priority).border
+                              }}
+                            >
+                              {item.priority}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {item.category}
+                            </Badge>
+                          </div>
                         </div>
                         
-                        <div className="flex items-center gap-2">
-                          {item.attachments && item.attachments.length > 0 && (
-                            <Badge variant="outline" className="text-xs">
-                              {item.attachments.length} attachment{item.attachments.length > 1 ? 's' : ''}
-                            </Badge>
-                          )}
-                          <Link href={`/dashboard/actions/${item.id}`}>
-                            <Button variant="outline" size="sm">
-                              View Details
-                            </Button>
-                          </Link>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4 text-sm text-gray-500">
+                            <div className="flex items-center gap-2">
+                              <Avatar className="w-6 h-6">
+                                <AvatarImage src={item.assignedByAvatar} alt={item.assignedBy} />
+                                <AvatarFallback className="text-xs">
+                                  {item.assignedBy.split(' ').map(n => n[0]).join('')}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span>Assigned by {item.assignedBy}</span>
+                            </div>
+                            <span>Due: {new Date(item.dueDate).toLocaleDateString()}</span>
+                            <span>Est. time: {item.estimatedTime}</span>
+                          </div>
+                          
+                          <div className="flex items-center gap-2">
+                            {item.attachments && item.attachments.length > 0 && (
+                              <Badge variant="outline" className="text-xs">
+                                {item.attachments.length} attachment{item.attachments.length > 1 ? 's' : ''}
+                              </Badge>
+                            )}
+                            <Link href={`/dashboard/actions/${item.id}`}>
+                              <Button variant="outline" size="sm">
+                                View Details
+                              </Button>
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          )}
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   )
 } 

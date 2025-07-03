@@ -144,7 +144,7 @@ export default function MyActionQueue() {
         {visibleItems.map(item => (
           <div
             key={item.id}
-            className={`flex items-center gap-3 p-3 rounded-md border border-gray-100 bg-[#F8FAFC]`}
+            className={`flex items-center gap-3 p-4 rounded-md border border-gray-100 bg-[#F8FAFC]`}
           >
             <div className="flex flex-col flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">

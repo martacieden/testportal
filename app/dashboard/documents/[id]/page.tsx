@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation"
+import DashboardLayout from "@/components/dashboard-layout"
 import { FileText, Calendar, HardDrive, ArrowLeft, Search, Edit, Clock, Download, Share2, Eye, Tag, User, MessageSquare, BarChart3, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,6 +10,7 @@ import Link from "next/link"
 import { DocumentChat } from "@/components/document-chat"
 import { DocumentInsights } from "@/components/document-insights"
 import { TaskAutomation } from "@/components/task-automation"
+import { PDFViewer } from "@/components/pdf-viewer"
 // If these components exist, import them; otherwise, comment out or remove
 // import { DocumentChat } from "@/components/document-chat"
 // import { DocumentInsights } from "@/components/document-insights"
@@ -28,7 +30,7 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
     "1": {
       id: "1",
       name: "Government ID.pdf",
-      url: "/placeholder.svg?height=800&width=600",
+      url: "/lorem-ipsum.pdf",
       uploadedAt: "2025-01-15T10:30:00Z",
       summary: "Driver's license and passport documents for identity verification. These documents are required for account setup and compliance purposes.",
       fileType: "pdf",
@@ -66,7 +68,7 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
     "2": {
       id: "2",
       name: "Tax Return 2024.pdf",
-      url: "/placeholder.svg?height=800&width=600",
+      url: "/lorem-ipsum.pdf",
       uploadedAt: "2025-01-10T14:20:00Z",
       summary: "Complete tax return for 2024 fiscal year including all schedules, deductions, and supporting documentation.",
       fileType: "pdf",
@@ -116,7 +118,7 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
     "3": {
       id: "3",
       name: "Estate Planning Documents.pdf",
-      url: "/placeholder.svg?height=800&width=600",
+      url: "/lorem-ipsum.pdf",
       uploadedAt: "2025-01-08T09:15:00Z",
       summary: "Comprehensive estate planning documents including will, trust, and power of attorney documents for wealth transfer and asset protection.",
       fileType: "pdf",
@@ -204,9 +206,9 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-6 py-8">
+    <DashboardLayout>
       <Link href="/dashboard/documents">
-        <Button variant="ghost" className="mb-6">
+        <Button variant="ghost" className="mt-2 mb-2">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Documents
         </Button>
@@ -218,7 +220,7 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-1">
                   <FileText className="h-8 w-8 text-blue-600" />
                   <div>
                     <h1 className="text-2xl font-bold">{document.name}</h1>
@@ -228,7 +230,7 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 justify-end">
                   <Button variant="outline" size="sm">
                     <Share2 className="h-4 w-4 mr-2" />
                     Share
@@ -245,32 +247,16 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
               </div>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="content" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
-                  <TabsTrigger value="content">Content</TabsTrigger>
-                  <TabsTrigger value="chat">AI Chat</TabsTrigger>
-                  <TabsTrigger value="insights">Insights</TabsTrigger>
-                  <TabsTrigger value="automation">Automation</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="content" className="mt-6">
-                  <div className="prose dark:prose-invert max-w-none">
-                    <div dangerouslySetInnerHTML={{ __html: document.content.replace(/\n/g, "<br />") }} />
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="chat" className="mt-6">
-                  <DocumentChat documentId={document.id} documentContent={document.content} />
-                </TabsContent>
-                
-                <TabsContent value="insights" className="mt-6">
-                  <DocumentInsights documentId={document.id} documentContent={document.content} />
-                </TabsContent>
-                
-                <TabsContent value="automation" className="mt-6">
-                  <TaskAutomation documentId={document.id} documentName={document.name} documentSummary={document.summary} />
-                </TabsContent>
-              </Tabs>
+              {/* PDF Preview always visible, with spacing */}
+              <div className="mt-6">
+                <PDFViewer url={document.url} title={document.name} />
+              </div>
+              {/* Content section, if you want to keep it visible below PDF */}
+              {/*
+              <div className="mt-8 prose dark:prose-invert max-w-none">
+                <div dangerouslySetInnerHTML={{ __html: document.content.replace(/\n/g, "<br />") }} />
+              </div>
+              */}
             </CardContent>
           </Card>
         </div>
@@ -287,7 +273,6 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">{document.summary}</p>
-              
               {/* Tags */}
               <div className="space-y-2">
                 <h4 className="text-sm font-medium">Tags</h4>
@@ -298,6 +283,11 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
                     </Badge>
                   ))}
                 </div>
+              </div>
+              {/* AI Chat and Insights below summary, visible by default */}
+              <div className="mt-6 space-y-6">
+                <DocumentChat documentId={document.id} documentContent={document.content} />
+                <DocumentInsights documentId={document.id} documentContent={document.content} />
               </div>
             </CardContent>
           </Card>
@@ -413,6 +403,6 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
           </Card>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   )
 } 

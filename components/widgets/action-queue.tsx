@@ -79,10 +79,10 @@ export function ActionQueueWidget() {
   const [showAll, setShowAll] = useState(false)
 
   const getPriorityColor = (priority: string) => {
-    if (priority === "urgent") return { bg: "#FEF2F2", text: "#DC2626" }
-    if (priority === "high") return { bg: "#E6F3FF", text: "#1E9ADF" }
-    if (priority === "medium") return { bg: "#F3F4F6", text: "#6B7280" }
-    return { bg: "#F3F4F6", text: "#6B7280" }
+    if (priority === "urgent") return "error"
+    if (priority === "high") return "info"
+    if (priority === "medium") return "warning"
+    return "secondary"
   }
 
   const getDueDateStatus = (dueDate: string) => {
@@ -125,13 +125,11 @@ export function ActionQueueWidget() {
   const visibleItems = showAll ? sortedItems : sortedItems.slice(0, 3)
 
   return (
-    <Card className="shadow-sm border-0 h-full flex flex-col" style={{ backgroundColor: "#FFFFFF" }}>
-      <CardHeader className="flex flex-row items-center justify-between pb-4">
+    <Card className="h-full flex flex-col">
+      <CardHeader>
         <div>
-          <CardTitle className="text-lg font-semibold" style={{ color: "#063852" }}>
-            My Action Queue
-          </CardTitle>
-          <CardDescription style={{ color: "#444444" }}>
+          <CardTitle>My Action Queue</CardTitle>
+          <CardDescription>
             Tasks and items requiring your attention
           </CardDescription>
         </div>
@@ -142,53 +140,46 @@ export function ActionQueueWidget() {
             visibleItems.map((item) => (
               <div
                 key={item.id}
-                className="flex items-start gap-3 p-3 rounded-lg border border-gray-200 bg-white"
+                className="flex items-start gap-3 p-3 rounded-lg border border-neutral-200 bg-white"
               >
                 <button
                   onClick={() => toggleCompletion(item.id)}
-                  className="mt-1 p-1 hover:bg-gray-100 rounded transition-colors"
+                  className="mt-1 p-1 hover:bg-neutral-100 rounded transition-colors"
                 >
                   {completedItems.has(item.id) ? (
-                    <CheckSquare className="h-4 w-4 text-green-600" />
+                    <CheckSquare className="h-4 w-4 text-status-success" />
                   ) : (
-                    <Square className="h-4 w-4 text-gray-400" />
+                    <Square className="h-4 w-4 text-neutral-400" />
                   )}
                 </button>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-2 mb-1">
                     <h4
-                      className="font-semibold text-sm cursor-pointer hover:underline transition-colors"
-                      style={{ color: '#063852', display: 'inline' }}
+                      className="font-semibold text-sm cursor-pointer hover:underline transition-colors text-text-primary"
                     >
                       {item.title}
                     </h4>
-                    <Badge
-                      variant="small"
-                      style={{
-                        backgroundColor: getPriorityColor(item.priority).bg,
-                        color: getPriorityColor(item.priority).text
-                      }}
-                    >
+                    <Badge variant={getPriorityColor(item.priority) as any}>
                       {item.priority.charAt(0).toUpperCase() + item.priority.slice(1)}
                     </Badge>
                     {getDueDateStatus(item.dueDate) === "overdue" && (
-                      <Badge variant="small" className="bg-red-100 text-red-700 ml-1">
+                      <Badge variant="error" className="ml-1">
                         Overdue
                       </Badge>
                     )}
                     {item.isBlocker && (
-                      <Badge variant="small" className="bg-orange-100 text-orange-700 ml-1">
+                      <Badge variant="warning" className="ml-1">
                         Blocker
                       </Badge>
                     )}
                   </div>
-                  <p className="text-xs" style={{ color: '#444444' }}>
+                  <p className="text-xs text-text-secondary">
                     {item.description}
                   </p>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="flex items-center gap-1">
-                      <User className="h-3 w-3" style={{ color: '#444444' }} />
-                      <span className="text-xs font-medium" style={{ color: '#444444' }}>
+                      <User className="h-3 w-3 text-text-secondary" />
+                      <span className="text-xs font-medium text-text-secondary">
                         Requestor:
                       </span>
                     </div>
@@ -198,33 +189,34 @@ export function ActionQueueWidget() {
                         {item.assignedBy.split(' ').map(n => n[0]).join('')}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-xs" style={{ color: '#444444' }}>
+                    <span className="text-xs text-text-secondary">
                       {item.assignedBy}
                     </span>
-                    <span className="text-xs" style={{ color: '#444444' }}>
+                    <span className="text-xs text-text-secondary">
                       Due: {new Date(item.dueDate).toLocaleDateString()}
                     </span>
-                    <Calendar className="h-3 w-3" style={{ color: '#444444' }} />
+                    <Calendar className="h-3 w-3 text-text-secondary" />
                   </div>
                 </div>
               </div>
             ))
           ) : (
             <div className="text-center py-8">
-              <span className="text-gray-400 text-sm">All caught up! No pending actions.</span>
+              <span className="text-neutral-400 text-sm">All caught up! No pending actions.</span>
             </div>
           )}
         </div>
         
         {/* Sticky bottom button */}
         {sortedItems.length > 3 && (
-          <div className="px-6 pb-6 pt-4 border-t border-gray-100 bg-white">
-            <button
-              className="w-full py-2 text-sm font-medium text-[#1E9ADF] bg-white border border-[#1E9ADF] rounded-md hover:bg-[#F3F4F6] transition"
+          <div className="px-6 pb-6 pt-4 border-t border-neutral-100 bg-white">
+            <Button
+              variant="brandOutline"
+              className="w-full"
               onClick={() => setShowAll(!showAll)}
             >
               {showAll ? "Show Less" : "View More"}
-            </button>
+            </Button>
           </div>
         )}
       </CardContent>

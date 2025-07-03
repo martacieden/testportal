@@ -139,7 +139,7 @@ export default function UploadCloudBlock() {
   return (
     <div className="flex flex-col space-y-8">
       <div className="mb-2">
-        <h1 className="text-4xl font-bold text-primary">Documents & Reports</h1>
+        <h1 className="text-4xl font-bold text-primary">Documents</h1>
         <p className="text-lg text-secondary-foreground mt-2">Access and manage your important documents</p>
       </div>
       

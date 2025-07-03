@@ -8,20 +8,26 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
-        secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        destructive:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground",
-        small: "px-1.5 py-0.5 text-xs font-light",
-        medium: "px-2 py-0.5 text-xs font-normal",
-        large: "px-2.5 py-1 text-sm font-medium",
+        default: "border-transparent bg-brand-primary text-white hover:bg-brand-primary/80",
+        secondary: "border-transparent bg-neutral-100 text-text-primary hover:bg-neutral-200",
+        destructive: "border-transparent bg-status-error text-white hover:bg-status-error/80",
+        outline: "border-neutral-200 text-text-primary",
+        // Status variants
+        success: "border-transparent bg-status-success/10 text-status-success border-status-success/20",
+        warning: "border-transparent bg-status-warning/10 text-status-warning border-status-warning/20",
+        error: "border-transparent bg-status-error/10 text-status-error border-status-error/20",
+        info: "border-transparent bg-status-info/10 text-status-info border-status-info/20",
+        // Brand variant
+        brand: "border-transparent bg-brand-primary text-white hover:bg-brand-primary/80",
+        // Size variants
+        xs: "px-1.5 py-0.5 text-xs font-light",
+        sm: "px-2 py-0.5 text-xs font-normal",
+        md: "px-2.5 py-1 text-sm font-medium",
+        lg: "px-3 py-1.5 text-sm font-semibold",
       },
     },
     defaultVariants: {
-      variant: "medium",
+      variant: "secondary",
     },
   }
 )

@@ -40,6 +40,7 @@ export interface Document {
   category: string;
   description: string;
   tags?: string[];
+  content?: string;
 }
 
 const documents: Document[] = [
@@ -54,7 +55,8 @@ const documents: Document[] = [
     lastAccessed: "2 hours ago",
     category: "Personal ID",
     description: "Driver's license and passport documents",
-    tags: ["ID", "Passport"]
+    tags: ["ID", "Passport"],
+    content: "No content available."
   },
   {
     id: "2",
@@ -67,7 +69,8 @@ const documents: Document[] = [
     lastAccessed: "1 day ago",
     category: "Financial Reports",
     description: "Quarterly financial statement and analysis",
-    tags: ["Financial", "Q4", "2024"]
+    tags: ["Financial", "Q4", "2024"],
+    content: "No content available."
   },
   {
     id: "3",
@@ -80,7 +83,8 @@ const documents: Document[] = [
     lastAccessed: "3 days ago",
     category: "Estate Planning",
     description: "Will, trust documents, and beneficiary forms",
-    tags: ["Estate", "Legal", "Trust"]
+    tags: ["Estate", "Legal", "Trust"],
+    content: "No content available."
   },
   {
     id: "4",
@@ -93,7 +97,8 @@ const documents: Document[] = [
     lastAccessed: "1 week ago",
     category: "Tax Documents",
     description: "Personal and business tax returns for 2024",
-    tags: ["Tax", "2024", "Returns"]
+    tags: ["Tax", "2024", "Returns"],
+    content: "No content available."
   },
   {
     id: "5",
@@ -106,7 +111,8 @@ const documents: Document[] = [
     lastAccessed: "2 days ago",
     category: "Investment Reports",
     description: "Current portfolio allocation and performance metrics",
-    tags: ["Investment", "Portfolio", "Performance"]
+    tags: ["Investment", "Portfolio", "Performance"],
+    content: "No content available."
   },
   {
     id: "6",
@@ -119,7 +125,8 @@ const documents: Document[] = [
     lastAccessed: "5 days ago",
     category: "Insurance",
     description: "Life, health, and property insurance policies",
-    tags: ["Insurance", "Life", "Health", "Property"]
+    tags: ["Insurance", "Life", "Health", "Property"],
+    content: "No content available."
   },
   {
     id: "7",
@@ -132,7 +139,8 @@ const documents: Document[] = [
     lastAccessed: "1 day ago",
     category: "Business Legal",
     description: "Application for business license renewal",
-    tags: ["Business", "License", "Application"]
+    tags: ["Business", "License", "Application"],
+    content: "No content available."
   },
   {
     id: "8",
@@ -145,21 +153,22 @@ const documents: Document[] = [
     lastAccessed: "2 days ago",
     category: "Personal Real Estate",
     description: "Property deed and title verification documents",
-    tags: ["Property", "Deed", "Title"]
+    tags: ["Property", "Deed", "Title"],
+    content: "No content available."
   }
 ];
 
 const getStatusBadge = (status: string) => {
   switch (status) {
     case "Verified":
-      return <Badge className="bg-green-100 text-green-800 border-green-200">✓ Verified</Badge>;
+      return <Badge variant="success">✓ Verified</Badge>;
     case "Pending Review":
-      return <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 flex items-center gap-1">
+      return <Badge variant="warning" className="flex items-center gap-1">
         <Clock className="h-3 w-3" />
         ⏳ Pending
       </Badge>;
     case "Complete":
-      return <Badge className="bg-blue-100 text-blue-800 border-blue-200">✓ Complete</Badge>;
+      return <Badge variant="info">✓ Complete</Badge>;
     default:
       return <Badge variant="outline">{status}</Badge>;
   }
@@ -198,225 +207,172 @@ export default function DocumentsManager() {
 
   return (
     <div className="space-y-6">
-      {/* Unified Header Row (clean, consistent controls) */}
-      <div className="flex flex-col gap-4 mb-4 w-full">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 w-full">
-          {/* Left: Search */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="relative w-full max-w-xs">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" style={{ color: "#636466" }} />
-              <Input
-                placeholder="Search documents..."
-                className="pl-10 w-full h-10 rounded-md text-sm font-medium border border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-100"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ background: "#fff" }}
-              />
-            </div>
-            {searchTerm && (
-              <div className="text-sm text-muted-foreground">
-                {filteredDocuments.length} of {documents.length} documents
-              </div>
-            )}
-          </div>
-          {/* Right: View Toggle, Upload Button */}
-          <div className="flex items-center gap-2 w-full md:w-auto">
-            <ToggleGroup
-              type="single"
-              value={view}
-              onValueChange={(val) => val && setView(val as 'card' | 'table')}
-              className="rounded-md p-0 h-10 min-w-[84px] flex border-0 bg-white shadow-none"
-              size="sm"
-              variant="outline"
-              aria-label="Switch documents view"
-            >
-              <ToggleGroupItem value="card" aria-label="Card view" className="h-10 px-3 rounded-md text-sm font-medium border-0 focus:bg-blue-50">
-                <LayoutGrid className="h-4 w-4" />
-                <span className="sr-only">Card</span>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="table" aria-label="Table view" className="h-10 px-3 rounded-md text-sm font-medium border-0 focus:bg-blue-50">
-                <TableIcon className="h-4 w-4" />
-                <span className="sr-only">Table</span>
-              </ToggleGroupItem>
-            </ToggleGroup>
-            <Button 
-              className="ml-2 h-10 px-4 text-sm font-medium text-white transition-colors" 
-              style={{ backgroundColor: "#1E9ADF" }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#1A8BC7"}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#1E9ADF"}
-              onClick={handleUploadDocument}
-            >
-              <Upload className="h-4 w-4 mr-2" />
-              Upload Document
-            </Button>
-          </div>
+      {/* Header */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-2xl font-bold text-text-primary mb-1 flex items-center gap-3">
+            Documents & Vault
+          </h1>
+          <p className="text-text-secondary text-sm">Access and manage your important financial documents securely.</p>
+        </div>
+        <div className="flex-shrink-0 mt-2 sm:mt-0">
+          <Button variant="brand" size="sm" onClick={handleUploadDocument}>
+            <Upload className="h-4 w-4 mr-2" />
+            Upload Document
+          </Button>
         </div>
       </div>
 
-      {/* Documents Content */}
-      <Card style={{ backgroundColor: "#FFFFFF", borderColor: "#E6EBED" }}>
-        <CardContent className="p-6">
-          {view === 'card' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {displayedDocuments.map((doc) => (
-                <Card
-                  key={doc.id}
-                  className="shadow-sm border hover:shadow-md transition-all duration-200 h-full flex flex-col"
-                  style={{ backgroundColor: "#FFFFFF", borderColor: "#F1F3F4" }}
-                >
-                  <CardContent className="p-6 h-full flex flex-col">
-                    <div className="flex flex-col space-y-1.5 p-0 min-h-0 flex-1">
-                      {/* Header Section */}
-                      <div className="flex items-start justify-between min-w-0">
-                        {/* Left: Document Info */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <FileText className="h-5 w-5 text-blue-500 flex-shrink-0" />
-                            <div className="truncate max-w-xs md:max-w-sm lg:max-w-md" title={doc.name}>
-                              <Link href={`/dashboard/documents/${doc.id}`} className="hover:underline">
-                                <h4 className="font-semibold tracking-tight text-base truncate" style={{ color: "#063852" }}>{doc.name}</h4>
-                              </Link>
-                            </div>
-                            {getStatusBadge(doc.status)}
-                          </div>
-                        </div>
-                        {/* Right: Actions */}
-                        <div className="flex flex-col items-end gap-2 ml-4">
-                          <div className="flex gap-1">
-                            <Button variant="ghost" size="sm" className="h-8 w-8"><Eye className="h-4 w-4" /></Button>
-                            <Button variant="ghost" size="sm" className="h-8 w-8"><Share2 className="h-4 w-4" /></Button>
-                            <Button variant="ghost" size="sm" className="h-8 w-8"><MoreHorizontal className="h-4 w-4" /></Button>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Description */}
-                      <p className="text-sm text-muted-foreground mt-2 line-clamp-2" style={{ color: "#636466", wordBreak: 'break-word' }}>
-                        {doc.description}
-                      </p>
-                      {/* Category Badge (Type) */}
-                      <div className="mt-2 flex items-center gap-2 flex-wrap">
-                        {getCategoryBadge(doc.category)}
-                        {doc.tags && doc.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            {doc.tags.map((tag, idx) => (
-                              <Badge key={idx} className="bg-blue-50 text-blue-700 border-blue-100 flex items-center gap-1"><Tag className="h-3 w-3" />{tag}</Badge>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      {/* File Info */}
-                      <div className="text-sm text-muted-foreground mt-2" style={{ color: "#636466" }}>
-                        <div className="flex items-center justify-between">
-                          <span>{doc.size}</span>
-                          <span>{new Date(doc.uploadedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                        </div>
-                      </div>
-                      {/* Uploader and Last Accessed */}
-                      <div className="p-0 pt-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Avatar className="w-6 h-6">
-                              <AvatarImage src={doc.uploadedByAvatar} alt={doc.uploadedBy} />
-                              <AvatarFallback className="bg-muted text-gray-600 text-xs">
-                                {doc.uploadedBy.split(" ").map(n => n[0]).join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="text-sm text-muted-foreground truncate" style={{ color: "#636466" }}>{doc.uploadedBy}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <Calendar className="w-4 h-4 mr-1 text-muted-foreground" />
-                            <span className="text-sm font-medium" style={{ color: "#063852" }}>{doc.lastAccessed}</span>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Action Buttons (Download/View) */}
-                      <div className="mt-4 pt-3 border-t">
-                        <div className="flex space-x-2">
-                          <Button variant="outline" size="sm" className="flex-1">
-                            <Download className="h-4 w-4 mr-2" />
-                            Download
-                          </Button>
-                          <Button variant="outline" size="sm" className="flex-1">
-                            <Eye className="h-4 w-4 mr-2" />
-                            View
-                          </Button>
-                        </div>
+      {/* Search and Filters */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-neutral-400" />
+          <Input
+            placeholder="Search documents..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <ToggleGroup type="single" value={view} onValueChange={(value) => value && setView(value as 'card' | 'table')}>
+          <ToggleGroupItem value="card" aria-label="Card view">
+            <LayoutGrid className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="table" aria-label="Table view">
+            <TableIcon className="h-4 w-4" />
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
+
+      {/* Documents Display */}
+      {view === 'card' ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {displayedDocuments.map((doc) => (
+            <Link key={doc.id} href={`/dashboard/documents/${doc.id}`} className="group">
+              <Card className="transition-all cursor-pointer group-hover:shadow-lg group-hover:scale-[1.02]">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-brand-primary" />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-base text-text-primary truncate group-hover:underline transition-all">
+                          {doc.name}
+                        </h3>
+                        <p className="text-xs text-text-secondary">{doc.size}</p>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <p className="text-xs text-text-secondary line-clamp-2">{doc.description}</p>
+                  {doc.content ? (
+                    <div className="text-xs text-text-primary bg-gray-50 rounded p-2 mt-2">{doc.content}</div>
+                  ) : (
+                    <div className="text-xs text-muted-foreground bg-gray-50 rounded p-2 mt-2">No content available.</div>
+                  )}
+                  <div className="flex items-center gap-2">
+                    {getCategoryBadge(doc.category)}
+                    {getStatusBadge(doc.status)}
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-text-tertiary">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="w-6 h-6">
+                        <AvatarImage src={doc.uploadedByAvatar} alt={doc.uploadedBy} />
+                        <AvatarFallback className="text-xs">
+                          {doc.uploadedBy.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      <span>{new Date(doc.uploadedAt).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" className="flex-1" onClick={e => { e.preventDefault(); window.open(`/dashboard/documents/${doc.id}`, '_self'); }}>
+                      <Eye className="h-3 w-3 mr-1" />
+                      View
+                    </Button>
+                    <Button variant="outline" size="sm" className="flex-1">
+                      <Download className="h-3 w-3 mr-1" />
+                      Download
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Document</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Uploaded By</TableHead>
+                <TableHead>Last Accessed</TableHead>
+                <TableHead>Content</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {displayedDocuments.map((doc) => (
+                <TableRow key={doc.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <FileText className="h-4 w-4 text-brand-primary" />
+                      <div>
+                        <Link href={`/dashboard/documents/${doc.id}`} className="font-medium text-text-primary hover:underline transition-colors">
+                          {doc.name}
+                        </Link>
+                        <div className="text-sm text-text-secondary">{doc.size}</div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>{getCategoryBadge(doc.category)}</TableCell>
+                  <TableCell>{getStatusBadge(doc.status)}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="w-6 h-6">
+                        <AvatarImage src={doc.uploadedByAvatar} alt={doc.uploadedBy} />
+                        <AvatarFallback className="text-xs">
+                          {doc.uploadedBy.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-sm text-text-secondary">{doc.lastAccessed}</TableCell>
+                  <TableCell>
+                    {doc.content ? (
+                      <div className="text-xs text-text-primary bg-gray-50 rounded p-2">{doc.content}</div>
+                    ) : (
+                      <div className="text-xs text-muted-foreground bg-gray-50 rounded p-2">No content available.</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Link href={`/dashboard/documents/${doc.id}`}> 
+                        <Eye className="h-4 w-4" />
+                      </Link>
+                      <Button variant="ghost" size="sm">
+                        <Download className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Share2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
               ))}
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Tags</TableHead>
-                    <TableHead>Size</TableHead>
-                    <TableHead>Uploaded By</TableHead>
-                    <TableHead>Last Accessed</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {displayedDocuments.map((doc) => (
-                    <TableRow key={doc.id}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4 text-blue-500" />
-                          <Link href={`/dashboard/documents/${doc.id}`} className="hover:underline">
-                            {doc.name}
-                          </Link>
-                        </div>
-                        <div className="text-xs text-muted-foreground line-clamp-1">{doc.description}</div>
-                      </TableCell>
-                      <TableCell>{getCategoryBadge(doc.category)}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {doc.tags?.map((tag, idx) => (
-                            <Badge key={idx} className="bg-blue-50 text-blue-700 border-blue-100 flex items-center gap-1"><Tag className="h-3 w-3" />{tag}</Badge>
-                          ))}
-                        </div>
-                      </TableCell>
-                      <TableCell>{doc.size}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="w-5 h-5">
-                            <AvatarImage src={doc.uploadedByAvatar} alt={doc.uploadedBy} />
-                            <AvatarFallback className="bg-muted text-gray-600 text-xs">
-                              {doc.uploadedBy.split(" ").map(n => n[0]).join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm text-muted-foreground truncate">{doc.uploadedBy}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{doc.lastAccessed}</TableCell>
-                      <TableCell>{getStatusBadge(doc.status)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <Button variant="ghost" size="sm" className="h-8 w-8"><Eye className="h-4 w-4" /></Button>
-                          <Button variant="ghost" size="sm" className="h-8 w-8"><Share2 className="h-4 w-4" /></Button>
-                          <Button variant="ghost" size="sm" className="h-8 w-8"><MoreHorizontal className="h-4 w-4" /></Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            </TableBody>
+          </Table>
+        </Card>
+      )}
 
-      {/* Document Upload Modal */}
-      <DocumentUploadModal 
-        open={uploadModalOpen} 
-        onOpenChange={setUploadModalOpen} 
-      />
+      {/* Upload Modal */}
+      <DocumentUploadModal open={uploadModalOpen} onOpenChange={setUploadModalOpen} />
     </div>
   );
 } 

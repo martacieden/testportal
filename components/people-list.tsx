@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -10,11 +10,23 @@ import { Input } from "@/components/ui/input"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
+import { Copy } from "lucide-react"
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 
 export default function PeopleList() {
-  const [activeTab, setActiveTab] = useState("internal")
+  const [activeTab, setActiveTab] = useState("all")
   const [searchTerm, setSearchTerm] = useState("")
   const [view, setView] = useState<'card' | 'table'>('card')
+  const [open, setOpen] = useState(false)
+  const [form, setForm] = useState({
+    name: '',
+    role: '',
+    email: '',
+    phone: '',
+    category: 'internal',
+    avatar: ''
+  })
 
   // Family members
   const familyMembers = [
@@ -28,6 +40,7 @@ export default function PeopleList() {
       birthday: "March 15",
       interests: ["Travel", "Photography"],
       avatar: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "family"
     },
     {
       id: "2",
@@ -39,6 +52,7 @@ export default function PeopleList() {
       birthday: "July 22",
       interests: ["Sports", "Gaming"],
       avatar: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "family"
     },
     {
       id: "3",
@@ -50,6 +64,7 @@ export default function PeopleList() {
       birthday: "December 8",
       interests: ["Art", "Music"],
       avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "family"
     },
   ]
 
@@ -66,6 +81,7 @@ export default function PeopleList() {
       currentClients: 12,
       availability: "available",
       avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "internal"
     },
     {
       id: "2",
@@ -78,6 +94,7 @@ export default function PeopleList() {
       currentClients: 8,
       availability: "busy",
       avatar: "https://images.unsplash.com/photo-1519340333755-c1aa5571fd46?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "internal"
     },
     {
       id: "3",
@@ -90,6 +107,7 @@ export default function PeopleList() {
       currentClients: 15,
       availability: "available",
       avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "internal"
     },
     {
       id: "4",
@@ -102,6 +120,7 @@ export default function PeopleList() {
       currentClients: 10,
       availability: "away",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "internal"
     },
   ]
 
@@ -118,6 +137,7 @@ export default function PeopleList() {
       relationship: "Preferred Partner",
       lastContact: "2 days ago",
       avatar: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "external"
     },
     {
       id: "2",
@@ -130,6 +150,7 @@ export default function PeopleList() {
       relationship: "Trusted Partner",
       lastContact: "1 week ago",
       avatar: "https://images.unsplash.com/photo-1519340333755-c1aa5571fd46?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "external"
     },
     {
       id: "3",
@@ -142,6 +163,7 @@ export default function PeopleList() {
       relationship: "Strategic Partner",
       lastContact: "3 days ago",
       avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "external"
     },
     {
       id: "4",
@@ -154,17 +176,21 @@ export default function PeopleList() {
       relationship: "Preferred Partner",
       lastContact: "5 days ago",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&w=128&h=128&facepad=2",
+      category: "external"
     },
   ]
+
+  // Combine all people for the "All" tab
+  const allPeople = [...internalTeam, ...familyMembers, ...externalPartners]
 
   const getAvailabilityBadge = (availability: string) => {
     switch (availability) {
       case "available":
-        return <Badge className="bg-green-100 text-green-800">Available</Badge>
+        return <Badge variant="success">Available</Badge>
       case "busy":
-        return <Badge className="bg-red-100 text-red-800">Busy</Badge>
+        return <Badge variant="error">Busy</Badge>
       case "away":
-        return <Badge className="bg-amber-100 text-amber-800">Away</Badge>
+        return <Badge variant="warning">Away</Badge>
       default:
         return <Badge variant="outline">{availability}</Badge>
     }
@@ -173,360 +199,679 @@ export default function PeopleList() {
   const getRelationshipBadge = (relationship: string) => {
     switch (relationship) {
       case "Preferred Partner":
-        return <Badge style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>Preferred Partner</Badge>
+        return <Badge variant="brand">Preferred Partner</Badge>
       case "Trusted Partner":
-        return <Badge className="bg-green-100 text-green-800">Trusted Partner</Badge>
+        return <Badge variant="success">Trusted Partner</Badge>
       case "Strategic Partner":
-        return <Badge className="bg-purple-100 text-purple-800">Strategic Partner</Badge>
+        return <Badge variant="info">Strategic Partner</Badge>
       default:
         return <Badge variant="outline">{relationship}</Badge>
     }
   }
 
-  const handleAddPeople = () => {
-    // TODO: Implement add people functionality
-    console.log('Add people clicked')
+  const getCategoryBadge = (category: string) => {
+    switch (category) {
+      case "internal":
+        return <Badge variant="brand">Internal Team</Badge>
+      case "family":
+        return <Badge variant="success">Family</Badge>
+      case "external":
+        return <Badge variant="info">External Partner</Badge>
+      default:
+        return <Badge variant="outline">{category}</Badge>
+    }
   }
 
+  useEffect(() => {
+    const handler = (e: any) => {
+      const form = e.detail
+      let newPerson: any = { ...form, id: Date.now().toString(), avatar: form.avatar || undefined }
+      if (form.category === 'internal') {
+        newPerson = {
+          ...newPerson,
+          department: 'Advisory',
+          specialties: [],
+          currentClients: 0,
+          availability: 'available',
+        }
+        internalTeam.push(newPerson)
+      } else if (form.category === 'family') {
+        newPerson = {
+          ...newPerson,
+          relationship: form.role || 'Family',
+          birthday: '',
+          interests: [],
+        }
+        familyMembers.push(newPerson)
+      } else if (form.category === 'external') {
+        newPerson = {
+          ...newPerson,
+          company: '',
+          specialties: [],
+          relationship: form.role || 'Partner',
+        }
+        externalPartners.push(newPerson)
+      }
+    }
+    window.addEventListener('add-person', handler)
+    return () => window.removeEventListener('add-person', handler)
+  }, [])
+
   return (
-    <div className="space-y-6">
-      {/* Unified Header Row (clean, consistent controls) */}
-      <div className="flex flex-col gap-4 mb-4 w-full">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 w-full">
-          {/* Left: Tabs only */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
-              <TabsList className="flex items-center bg-white p-0 shadow-none border-none h-10">
-                <TabsTrigger value="internal" className="data-[state=active]:bg-blue-50 px-4 h-10 rounded-md text-sm font-medium" style={{ color: "#063852" }}>
-                  <UserCheck className="h-4 w-4 mr-2" />Internal Team
-                </TabsTrigger>
-                <TabsTrigger value="family" className="data-[state=active]:bg-blue-50 px-4 h-10 rounded-md text-sm font-medium" style={{ color: "#063852" }}>
-                  <Heart className="h-4 w-4 mr-2" />Family
-                </TabsTrigger>
-                <TabsTrigger value="external" className="data-[state=active]:bg-blue-50 px-4 h-10 rounded-md text-sm font-medium" style={{ color: "#063852" }}>
-                  <Building className="h-4 w-4 mr-2" />External Partner
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
+    <>
+      <div className="space-y-6">
+        {/* Search and View Toggle */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-neutral-400" />
+            <Input
+              placeholder="Search people..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
-          {/* Right: Search, View Toggle, Add People Button */}
-          <div className="flex items-center gap-2 w-full md:w-auto">
-            <div className="relative w-full max-w-xs">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" style={{ color: "#636466" }} />
-              <Input
-                placeholder={
-                  activeTab === "family" ? "Search family members..." :
-                  activeTab === "internal" ? "Search team members..." :
-                  "Search partners..."
-                }
-                className="pl-10 w-full h-10 rounded-md text-sm font-medium border border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-100"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ background: "#fff" }}
-              />
-            </div>
-            <ToggleGroup
-              type="single"
-              value={view}
-              onValueChange={(val) => val && setView(val as 'card' | 'table')}
-              className="rounded-md p-0 h-10 min-w-[84px] flex border-0 bg-white shadow-none"
-              size="sm"
-              variant="outline"
-              aria-label="Switch people view"
-            >
-              <ToggleGroupItem value="card" aria-label="Card view" className="h-10 px-3 rounded-md text-sm font-medium border-0 focus:bg-blue-50">
-                <LayoutGrid className="h-4 w-4" />
-                <span className="sr-only">Card</span>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="table" aria-label="Table view" className="h-10 px-3 rounded-md text-sm font-medium border-0 focus:bg-blue-50">
-                <TableIcon className="h-4 w-4" />
-                <span className="sr-only">Table</span>
-              </ToggleGroupItem>
-            </ToggleGroup>
-            <Button 
-              className="ml-2 h-10 px-4 text-sm font-medium text-white transition-colors" 
-              style={{ backgroundColor: "#1E9ADF" }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#1A8BC7"}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#1E9ADF"}
-              onClick={handleAddPeople}
-            >
-              + Add People
-            </Button>
-          </div>
+          <ToggleGroup type="single" value={view} onValueChange={(value) => value && setView(value as 'card' | 'table')}>
+            <ToggleGroupItem value="card" aria-label="Card view">
+              <LayoutGrid className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="table" aria-label="Table view">
+              <TableIcon className="h-4 w-4" />
+            </ToggleGroupItem>
+          </ToggleGroup>
         </div>
+
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="internal">Internal Team</TabsTrigger>
+            <TabsTrigger value="family">Family</TabsTrigger>
+            <TabsTrigger value="external">External Partners</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="all" className="space-y-4">
+            {view === 'card' ? (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {allPeople.map((person) => (
+                  <Card key={`${person.category}-${person.id}`} className="hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="w-12 h-12">
+                            <AvatarImage src={person.avatar} alt={person.name} />
+                            <AvatarFallback>{person.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h3 className="font-semibold text-text-primary">{person.name}</h3>
+                            <p className="text-sm text-text-secondary">{person.role}</p>
+                          </div>
+                        </div>
+                        {person.category === 'internal' && 'availability' in person && getAvailabilityBadge(person.availability)}
+                        {person.category === 'external' && 'relationship' in person && getRelationshipBadge(person.relationship)}
+                        {person.category === 'family' && getCategoryBadge(person.category)}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {person.category === 'internal' && 'department' in person && (
+                        <>
+                          <div className="text-sm text-text-secondary">
+                            <p className="font-medium">{person.department}</p>
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {person.specialties.map((specialty: string, index: number) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {specialty}
+                              </Badge>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                      {person.category === 'family' && 'birthday' in person && (
+                        <>
+                          <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                            <Calendar className="h-3 w-3" />
+                            <span>Birthday: {person.birthday}</span>
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {person.interests.map((interest: string, index: number) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {interest}
+                              </Badge>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                      {person.category === 'external' && 'company' in person && (
+                        <>
+                          <div className="text-sm text-text-secondary">
+                            <p className="font-medium">{person.company}</p>
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {person.specialties.map((specialty: string, index: number) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {specialty}
+                              </Badge>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary group">
+                        <Mail className="h-3 w-3" />
+                        <span>{person.email}</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => navigator.clipboard.writeText(person.email)}
+                                tabIndex={0}
+                                aria-label={`Copy email for ${person.name}`}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Copy email</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary group">
+                        <Phone className="h-3 w-3" />
+                        <span>{person.phone}</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => navigator.clipboard.writeText(person.phone)}
+                                tabIndex={0}
+                                aria-label={`Copy phone for ${person.name}`}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Copy phone</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Details</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Contact</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {allPeople.map((person) => (
+                      <TableRow key={`${person.category}-${person.id}`}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="w-8 h-8">
+                              <AvatarImage src={person.avatar} alt={person.name} />
+                              <AvatarFallback className="text-xs">{person.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium text-text-primary">{person.name}</div>
+                              <div className="text-sm text-text-secondary">{person.role}</div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-text-secondary">{person.role}</TableCell>
+                        <TableCell>{getCategoryBadge(person.category)}</TableCell>
+                        <TableCell>
+                          {person.category === 'internal' && 'department' in person && person.department}
+                          {person.category === 'family' && 'relationship' in person && person.relationship}
+                          {person.category === 'external' && 'company' in person && person.company}
+                        </TableCell>
+                        <TableCell>
+                          {person.category === 'internal' && 'availability' in person && getAvailabilityBadge(person.availability)}
+                          {person.category === 'external' && 'relationship' in person && getRelationshipBadge(person.relationship)}
+                          {person.category === 'family' && <Badge variant="outline">Family Member</Badge>}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="sm">
+                              <Mail className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              <Phone className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="internal" className="space-y-4">
+            {view === 'card' ? (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {internalTeam.map((member) => (
+                  <Card key={member.id} className="hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="w-12 h-12">
+                            <AvatarImage src={member.avatar} alt={member.name} />
+                            <AvatarFallback>{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h3 className="font-semibold text-text-primary">{member.name}</h3>
+                            <p className="text-sm text-text-secondary">{member.role}</p>
+                          </div>
+                        </div>
+                        {getAvailabilityBadge(member.availability)}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="text-sm text-text-secondary">
+                        <p className="font-medium">{member.department}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {member.specialties.map((specialty, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {specialty}
+                          </Badge>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary group">
+                        <Mail className="h-3 w-3" />
+                        <span>{member.email}</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => navigator.clipboard.writeText(member.email)}
+                                tabIndex={0}
+                                aria-label={`Copy email for ${member.name}`}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Copy email</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary group">
+                        <Phone className="h-3 w-3" />
+                        <span>{member.phone}</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => navigator.clipboard.writeText(member.phone)}
+                                tabIndex={0}
+                                aria-label={`Copy phone for ${member.name}`}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Copy phone</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Department</TableHead>
+                      <TableHead>Specialties</TableHead>
+                      <TableHead>Availability</TableHead>
+                      <TableHead>Contact</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {internalTeam.map((member) => (
+                      <TableRow key={member.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="w-8 h-8">
+                              <AvatarImage src={member.avatar} alt={member.name} />
+                              <AvatarFallback className="text-xs">{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium text-text-primary">{member.name}</div>
+                              <div className="text-sm text-text-secondary">{member.role}</div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-text-secondary">{member.role}</TableCell>
+                        <TableCell className="text-text-secondary">{member.department}</TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {member.specialties.slice(0, 2).map((specialty, index) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {specialty}
+                              </Badge>
+                            ))}
+                            {member.specialties.length > 2 && (
+                              <Badge variant="outline" className="text-xs">
+                                +{member.specialties.length - 2}
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>{getAvailabilityBadge(member.availability)}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="sm">
+                              <Mail className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              <Phone className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="family" className="space-y-4">
+            {view === 'card' ? (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {familyMembers.map((member) => (
+                  <Card key={member.id} className="hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src={member.avatar} alt={member.name} />
+                          <AvatarFallback>{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-text-primary">{member.name}</h3>
+                            <Badge variant="success" className="ml-2">Family</Badge>
+                          </div>
+                          <p className="text-sm text-text-secondary">{member.relationship}</p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                        <Calendar className="h-3 w-3" />
+                        <span>Birthday: {member.birthday}</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {member.interests.map((interest, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {interest}
+                          </Badge>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary group">
+                        <Mail className="h-3 w-3" />
+                        <span>{member.email}</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => navigator.clipboard.writeText(member.email)}
+                                tabIndex={0}
+                                aria-label={`Copy email for ${member.name}`}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Copy email</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary group">
+                        <Phone className="h-3 w-3" />
+                        <span>{member.phone}</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => navigator.clipboard.writeText(member.phone)}
+                                tabIndex={0}
+                                aria-label={`Copy phone for ${member.name}`}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Copy phone</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Relationship</TableHead>
+                      <TableHead>Birthday</TableHead>
+                      <TableHead>Interests</TableHead>
+                      <TableHead>Contact</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {familyMembers.map((member) => (
+                      <TableRow key={member.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="w-8 h-8">
+                              <AvatarImage src={member.avatar} alt={member.name} />
+                              <AvatarFallback className="text-xs">{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                            </Avatar>
+                            <div className="font-medium text-text-primary">{member.name}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-text-secondary">{member.relationship}</TableCell>
+                        <TableCell className="text-text-secondary">{member.birthday}</TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {member.interests.map((interest, index) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {interest}
+                              </Badge>
+                            ))}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="sm">
+                              <Mail className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              <Phone className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="external" className="space-y-4">
+            {view === 'card' ? (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {externalPartners.map((partner) => (
+                  <Card key={partner.id} className="hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="w-12 h-12">
+                            <AvatarImage src={partner.avatar} alt={partner.name} />
+                            <AvatarFallback>{partner.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h3 className="font-semibold text-text-primary">{partner.name}</h3>
+                            <p className="text-sm text-text-secondary">{partner.role}</p>
+                          </div>
+                        </div>
+                        {getRelationshipBadge(partner.relationship)}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="text-sm text-text-secondary">
+                        <p className="font-medium">{partner.company}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {partner.specialties.map((specialty, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {specialty}
+                          </Badge>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary group">
+                        <Mail className="h-3 w-3" />
+                        <span>{partner.email}</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => navigator.clipboard.writeText(partner.email)}
+                                tabIndex={0}
+                                aria-label={`Copy email for ${partner.name}`}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Copy email</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary group">
+                        <Phone className="h-3 w-3" />
+                        <span>{partner.phone}</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => navigator.clipboard.writeText(partner.phone)}
+                                tabIndex={0}
+                                aria-label={`Copy phone for ${partner.name}`}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Copy phone</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Company</TableHead>
+                      <TableHead>Specialties</TableHead>
+                      <TableHead>Relationship</TableHead>
+                      <TableHead>Contact</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {externalPartners.map((partner) => (
+                      <TableRow key={partner.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="w-8 h-8">
+                              <AvatarImage src={partner.avatar} alt={partner.name} />
+                              <AvatarFallback className="text-xs">{partner.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium text-text-primary">{partner.name}</div>
+                              <div className="text-sm text-text-secondary">{partner.role}</div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-text-secondary">{partner.role}</TableCell>
+                        <TableCell className="text-text-secondary">{partner.company}</TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {partner.specialties.slice(0, 2).map((specialty, index) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {specialty}
+                              </Badge>
+                            ))}
+                            {partner.specialties.length > 2 && (
+                              <Badge variant="outline" className="text-xs">
+                                +{partner.specialties.length - 2}
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>{getRelationshipBadge(partner.relationship)}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="sm">
+                              <Mail className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              <Phone className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
-      {/* Tabs Content (no header/tabs here) */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Family Tab */}
-        <TabsContent value="family" className="mt-0">
-          <Card style={{ backgroundColor: "#FFFFFF", borderColor: "#E6EBED" }}>
-            <CardContent className="p-6">
-              {view === 'card' ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {familyMembers.map((member) => (
-                    <Card
-                      key={member.id}
-                      className="shadow-sm border hover:shadow-md transition-all duration-200 h-full"
-                      style={{ backgroundColor: "#FFFFFF", borderColor: "#F1F3F4" }}
-                    >
-                      <CardContent className="p-6 h-full flex flex-col">
-                        <div className="flex items-start gap-4 flex-1">
-                          <Avatar className="h-16 w-16 flex-shrink-0">
-                            <AvatarImage src={member.avatar || "/placeholder.svg"} />
-                            <AvatarFallback style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>
-                              {member.name.split(" ").map((n) => n[0]).join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-2">
-                              <h3 className="font-medium truncate" style={{ color: "#063852" }}>{member.name}</h3>
-                              <Badge variant="outline" style={{ color: "#636466" }} className="flex-shrink-0">{member.relationship}</Badge>
-                            </div>
-                            <p className="text-sm mb-1" style={{ color: "#636466" }}>{member.role}</p>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex items-center gap-2">
-                                <Mail className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
-                                <a href={`mailto:${member.email}`} className="hover:underline truncate" style={{ color: "#1E9ADF" }}>{member.email}</a>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Phone className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
-                                <a href={`tel:${member.phone}`} style={{ color: "#063852" }}>{member.phone}</a>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Calendar className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
-                                <span style={{ color: "#063852" }}>Birthday: {member.birthday}</span>
-                              </div>
-                            </div>
-                            <div className="mt-3">
-                              <p className="text-xs mb-1" style={{ color: "#636466" }}>Interests:</p>
-                              <div className="flex flex-wrap gap-1">
-                                {member.interests.map((interest, i) => (
-                                  <span key={i} className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: "#E6F3FF", color: "#1E9ADF" }}>{interest}</span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Relationship</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Phone</TableHead>
-                        <TableHead>Birthday</TableHead>
-                        <TableHead>Interests</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {familyMembers.map((member) => (
-                        <TableRow key={member.id}>
-                          <TableCell className="font-medium">{member.name}</TableCell>
-                          <TableCell>{member.relationship}</TableCell>
-                          <TableCell>{member.role}</TableCell>
-                          <TableCell><a href={`mailto:${member.email}`} className="text-blue-600 hover:underline">{member.email}</a></TableCell>
-                          <TableCell><a href={`tel:${member.phone}`} className="text-blue-600 hover:underline">{member.phone}</a></TableCell>
-                          <TableCell>{member.birthday}</TableCell>
-                          <TableCell>{member.interests.join(", ")}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Internal Team Tab */}
-        <TabsContent value="internal" className="mt-0">
-          <Card style={{ backgroundColor: "#FFFFFF", borderColor: "#E6EBED" }}>
-            <CardContent className="p-6">
-              {view === 'card' ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {internalTeam.map((member) => (
-                    <Card
-                      key={member.id}
-                      className="shadow-sm border hover:shadow-md transition-all duration-200 h-full"
-                      style={{ backgroundColor: "#FFFFFF", borderColor: "#F1F3F4" }}
-                    >
-                      <CardContent className="p-6 h-full flex flex-col">
-                        <div className="flex items-start gap-4 flex-1">
-                          <Avatar className="h-16 w-16 flex-shrink-0">
-                            <AvatarImage src={member.avatar || "/placeholder.svg"} />
-                            <AvatarFallback style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>
-                              {member.name.split(" ").map((n) => n[0]).join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-2">
-                              <h3 className="font-medium truncate" style={{ color: "#063852" }}>{member.name}</h3>
-                              <div className="flex-shrink-0">{getAvailabilityBadge(member.availability)}</div>
-                            </div>
-                            <p className="text-sm mb-1" style={{ color: "#636466" }}>{member.role}</p>
-                            <p className="text-sm mb-3" style={{ color: "#636466" }}>{member.department}</p>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex items-center gap-2">
-                                <Mail className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
-                                <a href={`mailto:${member.email}`} className="hover:underline truncate" style={{ color: "#1E9ADF" }}>{member.email}</a>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Phone className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
-                                <a href={`tel:${member.phone}`} style={{ color: "#063852" }}>{member.phone}</a>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Users className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
-                                <span style={{ color: "#063852" }}>{member.currentClients} active clients</span>
-                              </div>
-                            </div>
-                            <div className="mt-3">
-                              <p className="text-xs mb-1" style={{ color: "#636466" }}>Specialties:</p>
-                              <div className="flex flex-wrap gap-1">
-                                {member.specialties.map((specialty, i) => (
-                                  <span key={i} className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: "#E6F3FF", color: "#1E9ADF" }}>{specialty}</span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Department</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Phone</TableHead>
-                        <TableHead>Active Clients</TableHead>
-                        <TableHead>Availability</TableHead>
-                        <TableHead>Specialties</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {internalTeam.map((member) => (
-                        <TableRow key={member.id}>
-                          <TableCell className="font-medium">{member.name}</TableCell>
-                          <TableCell>{member.role}</TableCell>
-                          <TableCell>{member.department}</TableCell>
-                          <TableCell><a href={`mailto:${member.email}`} className="text-blue-600 hover:underline">{member.email}</a></TableCell>
-                          <TableCell><a href={`tel:${member.phone}`} className="text-blue-600 hover:underline">{member.phone}</a></TableCell>
-                          <TableCell>{member.currentClients}</TableCell>
-                          <TableCell>{getAvailabilityBadge(member.availability)}</TableCell>
-                          <TableCell>{member.specialties.join(", ")}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* External Partners Tab */}
-        <TabsContent value="external" className="mt-0">
-          <Card style={{ backgroundColor: "#FFFFFF", borderColor: "#E6EBED" }}>
-            <CardContent className="p-6">
-              {view === 'card' ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {externalPartners.map((partner) => (
-                    <Card
-                      key={partner.id}
-                      className="shadow-sm border hover:shadow-md transition-all duration-200 h-full"
-                      style={{ backgroundColor: "#FFFFFF", borderColor: "#F1F3F4" }}
-                    >
-                      <CardContent className="p-6 h-full flex flex-col">
-                        <div className="flex items-start gap-4 flex-1">
-                          <Avatar className="h-16 w-16 flex-shrink-0">
-                            <AvatarImage src={partner.avatar || "/placeholder.svg"} />
-                            <AvatarFallback style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>
-                              {partner.name.split(" ").map((n) => n[0]).join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-2">
-                              <h3 className="font-medium truncate" style={{ color: "#063852" }}>{partner.name}</h3>
-                              <div className="flex-shrink-0">{getRelationshipBadge(partner.relationship)}</div>
-                            </div>
-                            <p className="text-sm mb-1" style={{ color: "#636466" }}>{partner.role}</p>
-                            <p className="text-sm mb-3" style={{ color: "#636466" }}>{partner.company}</p>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex items-center gap-2">
-                                <Mail className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
-                                <a href={`mailto:${partner.email}`} className="hover:underline truncate" style={{ color: "#1E9ADF" }}>{partner.email}</a>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Phone className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
-                                <a href={`tel:${partner.phone}`} style={{ color: "#063852" }}>{partner.phone}</a>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Calendar className="h-3 w-3 flex-shrink-0" style={{ color: "#636466" }} />
-                                <span style={{ color: "#063852" }}>Last contact: {partner.lastContact}</span>
-                              </div>
-                            </div>
-                            <div className="mt-3">
-                              <p className="text-xs mb-1" style={{ color: "#636466" }}>Specialties:</p>
-                              <div className="flex flex-wrap gap-1">
-                                {partner.specialties.map((specialty, i) => (
-                                  <span key={i} className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: "#E6F3FF", color: "#1E9ADF" }}>{specialty}</span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Company</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Phone</TableHead>
-                        <TableHead>Relationship</TableHead>
-                        <TableHead>Last Contact</TableHead>
-                        <TableHead>Specialties</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {externalPartners.map((partner) => (
-                        <TableRow key={partner.id}>
-                          <TableCell className="font-medium">{partner.name}</TableCell>
-                          <TableCell>{partner.role}</TableCell>
-                          <TableCell>{partner.company}</TableCell>
-                          <TableCell><a href={`mailto:${partner.email}`} className="text-blue-600 hover:underline">{partner.email}</a></TableCell>
-                          <TableCell><a href={`tel:${partner.phone}`} className="text-blue-600 hover:underline">{partner.phone}</a></TableCell>
-                          <TableCell>{getRelationshipBadge(partner.relationship)}</TableCell>
-                          <TableCell>{partner.lastContact}</TableCell>
-                          <TableCell>{partner.specialties.join(", ")}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+    </>
   )
 }

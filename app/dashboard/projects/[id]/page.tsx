@@ -28,7 +28,6 @@ const navigation = [
   { name: 'Projects', href: '/dashboard/projects', icon: FolderOpen },
   { name: 'People', href: '/dashboard/people', icon: Users },
   { name: 'Documents & Vault', href: '/dashboard/documents', icon: FileText },
-  { name: 'Reports', href: '/dashboard/reports', icon: BarChart3 },
   { name: 'Resources & Education', href: '/dashboard/resources', icon: BookOpen },
 ];
 

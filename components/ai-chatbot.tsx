@@ -28,12 +28,21 @@ export default function AIChatbot() {
   ])
   const [inputMessage, setInputMessage] = useState("")
 
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return
+  // Suggestions for first-time users
+  const suggestions = [
+    "Show me my portfolio summary",
+    "Who is on my financial team?",
+    "What documents do I need to upload?",
+    "Upcoming meetings",
+  ]
+
+  const handleSendMessage = (msg?: string) => {
+    const messageToSend = typeof msg === "string" ? msg : inputMessage
+    if (!messageToSend.trim()) return
 
     const newMessage: Message = {
       id: messages.length + 1,
-      content: inputMessage,
+      content: messageToSend,
       isBot: false,
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     }
@@ -45,7 +54,7 @@ export default function AIChatbot() {
     setTimeout(() => {
       const botResponse: Message = {
         id: messages.length + 2,
-        content: getBotResponse(inputMessage),
+        content: getBotResponse(messageToSend),
         isBot: true,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       }
@@ -77,19 +86,6 @@ export default function AIChatbot() {
 
   return (
     <>
-      {/* Floating Chat Button */}
-      <div className="fixed bottom-6 right-6 z-50">
-        {!isOpen && (
-          <Button
-            onClick={() => setIsOpen(true)}
-            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
-            style={{ backgroundColor: "#1E9ADF" }}
-          >
-            <MessageCircle className="h-6 w-6" />
-          </Button>
-        )}
-      </div>
-
       {/* Chat Window */}
       {isOpen && (
         <div className="fixed bottom-6 right-6 z-50 w-96 h-[500px]">
@@ -122,7 +118,7 @@ export default function AIChatbot() {
               {/* Messages */}
               <ScrollArea className="flex-1 p-4">
                 <div className="space-y-4">
-                  {messages.map((message) => (
+                  {messages.map((message, idx) => (
                     <div key={message.id} className={`flex ${message.isBot ? "justify-start" : "justify-end"}`}>
                       <div
                         className={`flex items-start space-x-2 max-w-[80%] ${message.isBot ? "" : "flex-row-reverse space-x-reverse"}`}
@@ -158,6 +154,22 @@ export default function AIChatbot() {
                       </div>
                     </div>
                   ))}
+                  {/* Suggestions shown only if first message (welcome) is present */}
+                  {messages.length === 1 && (
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      {suggestions.map((suggestion, i) => (
+                        <Button
+                          key={i}
+                          variant="brandOutline"
+                          size="sm"
+                          className="rounded-full"
+                          onClick={() => handleSendMessage(suggestion)}
+                        >
+                          {suggestion}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </ScrollArea>
 
@@ -177,7 +189,7 @@ export default function AIChatbot() {
                     style={{ borderColor: "#E6EBED" }}
                   />
                   <Button
-                    onClick={handleSendMessage}
+                    onClick={() => handleSendMessage()}
                     size="sm"
                     disabled={!inputMessage.trim()}
                     style={{ backgroundColor: "#1E9ADF" }}

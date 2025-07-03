@@ -88,6 +88,24 @@ const defaultWidgets: Widget[] = [
     visible: false,
     order: 4,
     category: 'meetings'
+  },
+  {
+    id: 'announcements-preview',
+    title: 'Latest Announcement',
+    description: 'Most recent announcement from Cresset',
+    component: 'announcements-preview',
+    visible: true,
+    order: 5,
+    category: 'overview'
+  },
+  {
+    id: 'benefits-preview',
+    title: 'Featured Benefit',
+    description: 'Highlighted benefit available to you',
+    component: 'benefits-preview',
+    visible: true,
+    order: 5,
+    category: 'overview'
   }
 ]
 

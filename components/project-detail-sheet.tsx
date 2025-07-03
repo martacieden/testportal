@@ -233,7 +233,7 @@ export function ProjectDetailSheet({ open, onOpenChange, project }: ProjectDetai
               <div>
                 <h3 className="text-lg font-medium flex items-center">
                   Tasks
-                  <Badge variant="secondary" className="ml-1 px-2 py-1 text-xs">
+                  <Badge variant="secondary" className="ml-2 md:ml-4 px-2 py-1 text-xs">
                     {project.tasks.length}
                   </Badge>
                 </h3>

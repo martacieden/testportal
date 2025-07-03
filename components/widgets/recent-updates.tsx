@@ -54,9 +54,9 @@ const categoryColors = {
 }
 
 const priorityColors = {
-  high: "bg-red-100 text-red-800",
-  medium: "bg-yellow-100 text-yellow-800",
-  low: "bg-gray-100 text-gray-800"
+  high: "error",
+  medium: "warning",
+  low: "secondary"
 }
 
 // Sample data
@@ -175,13 +175,11 @@ export function RecentUpdatesWidget() {
   const visibleUpdates = showAll ? sampleUpdates : sampleUpdates.slice(0, 3)
 
   return (
-    <Card className="h-full flex flex-col border-0" style={{ backgroundColor: "#FFFFFF" }}>
-      <CardHeader className="pb-3">
+    <Card className="h-full flex flex-col">
+      <CardHeader>
         <div>
-          <CardTitle className="text-lg font-semibold" style={{ color: "#063852" }}>
-            Recent Updates
-          </CardTitle>
-          <CardDescription style={{ color: "#444444" }}>
+          <CardTitle>Recent Updates</CardTitle>
+          <CardDescription>
             Important developments and achievements
           </CardDescription>
         </div>
@@ -197,133 +195,110 @@ export function RecentUpdatesWidget() {
                 key={update.id}
                 className={cn(
                   "border rounded-lg transition-all cursor-pointer",
-                  isExpanded ? "border-blue-200 bg-blue-50/50" : "border-gray-200 hover:border-gray-300 hover:bg-gray-50/50"
+                  isExpanded ? "border-brand-primary/20 bg-brand-primary/5" : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50/50"
                 )}
                 onClick={() => handleUpdateClick(update.id)}
               >
-                {/* Update Header */}
                 <div className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className={cn("p-1 rounded", categoryColors[update.category])}>
-                          <CategoryIconComponent className="h-3 w-3" />
-                        </div>
-                        <Badge 
-                          variant="small" 
-                          className={cn("text-xs", priorityColors[update.priority])}
-                        >
-                          {update.priority}
-                        </Badge>
-                        {update.requiresAction && (
-                          <Badge variant="small" className="bg-blue-100 text-blue-800 text-xs">
-                            Action Required
-                          </Badge>
-                        )}
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <div className="mt-1">
+                        <CategoryIconComponent />
                       </div>
-                      
-                      <h4
-                        className="font-semibold text-sm mb-1 line-clamp-1 transition-colors cursor-pointer hover:underline"
-                        style={{ color: "#063852" }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          // TODO: Replace with actual route if detail page exists
-                          window.location.href = `/dashboard/updates/${update.id}`;
-                        }}
-                      >
-                        {update.title}
-                      </h4>
-                      
-                      <p className="text-xs mb-3 line-clamp-2" style={{ color: "#444444" }}>
-                        {update.description}
-                      </p>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-sm text-text-primary mb-1">
+                          {update.title}
+                        </h4>
+                        <p className="text-xs text-text-secondary mb-1">
+                          {update.description}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1 mb-2">
                           <Avatar className="w-6 h-6">
                             <AvatarImage src={update.advisor.avatar} alt={update.advisor.name} />
-                            <AvatarFallback className="text-xs">{update.advisor.initials}</AvatarFallback>
+                            <AvatarFallback className="text-xs">
+                              {update.advisor.initials}
+                            </AvatarFallback>
                           </Avatar>
-                          <span className="text-xs" style={{ color: "#444444" }}>{update.advisor.name}</span>
-                          <span className="text-xs" style={{ color: "#444444" }}>•</span>
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" style={{ color: "#444444" }} />
-                            <span className="text-xs" style={{ color: "#444444" }}>{update.timestamp}</span>
-                          </div>
+                          <span className="text-xs text-text-secondary">
+                            {update.advisor.name}
+                          </span>
                         </div>
-                        
-                        <div className="flex items-center gap-2">
-                          {update.requiresAction && update.actionText && update.actionText !== 'Schedule Call' && (
-                            <Button
-                              size="small"
-                              variant="outline"
-                              className="text-xs h-7 px-3"
-                              style={{ borderColor: "#1E9ADF", color: "#1E9ADF" }}
-                              onClick={(e) => handleActionClick(e, update)}
-                            >
-                              {update.actionText}
-                            </Button>
-                          )}
-                          {isExpanded ? (
-                            <ChevronDown className="h-4 w-4" style={{ color: "#444444" }} />
-                          ) : (
-                            <ChevronRight className="h-4 w-4" style={{ color: "#444444" }} />
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Badge variant={categoryColors[update.category] as any}>
+                            {update.category}
+                          </Badge>
+                          <Badge variant={priorityColors[update.priority] as any}>
+                            {update.priority.charAt(0).toUpperCase() + update.priority.slice(1)}
+                          </Badge>
+                          <span className="text-xs text-text-tertiary">
+                            {update.timestamp}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {update.requiresAction && (
+                        <Button
+                          size="sm"
+                          variant="brandOutline"
+                          onClick={(e) => handleActionClick(e, update)}
+                        >
+                          {update.actionText}
+                        </Button>
+                      )}
+                      <ChevronRight 
+                        className={cn(
+                          "h-4 w-4 text-text-tertiary transition-transform",
+                          isExpanded && "rotate-90"
+                        )} 
+                      />
+                    </div>
+                  </div>
+                  
+                  {isExpanded && (
+                    <div className="mt-4 pt-4 border-t border-neutral-200">
+                      <div className="space-y-3">
+                        <div>
+                          <h5 className="text-sm font-medium text-text-primary mb-2">
+                            Next Steps
+                          </h5>
+                          <ul className="space-y-1">
+                            {update.details.nextSteps.map((step, index) => (
+                              <li key={index} className="text-xs text-text-secondary flex items-start gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-brand-primary mt-1.5 flex-shrink-0"></span>
+                                {step}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Badge variant="secondary">
+                            {update.details.status}
+                          </Badge>
+                          {update.details.financialAmount && (
+                            <span className="text-sm font-medium text-text-primary">
+                              {update.details.financialAmount}
+                            </span>
                           )}
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
-
-                {/* Expanded Details */}
-                {isExpanded && (
-                  <div className="border-t border-gray-200 bg-white p-4 space-y-4">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      {update.details.financialAmount && (
-                        <div>
-                          <span style={{ color: "#444444" }}>Amount:</span>
-                          <span className="ml-2 font-medium">{update.details.financialAmount}</span>
-                        </div>
-                      )}
-                      {update.details.deadline && (
-                        <div>
-                          <span style={{ color: "#444444" }}>Deadline:</span>
-                          <span className="ml-2 font-medium">{update.details.deadline}</span>
-                        </div>
-                      )}
-                      <div className="col-span-2">
-                        <span style={{ color: "#444444" }}>Status:</span>
-                        <span className="ml-2 font-medium">{update.details.status}</span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h5 className="font-semibold text-sm mb-2" style={{ color: "#063852" }}>Next Steps:</h5>
-                      <ul className="space-y-1">
-                        {update.details.nextSteps.map((step, index) => (
-                          <li key={index} className="flex items-start text-sm">
-                            <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                            <span style={{ color: "#444444" }}>{step}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                )}
               </div>
             )
           })}
         </div>
         
-        {/* Sticky bottom button */}
         {sampleUpdates.length > 3 && (
-          <div className="px-6 pb-6 pt-4 border-t border-gray-100 bg-white">
-            <button
-              className="w-full py-2 text-sm font-medium text-[#1E9ADF] bg-white border border-[#1E9ADF] rounded-md hover:bg-[#F3F4F6] transition"
+          <div className="px-6 pb-6 pt-4 border-t border-neutral-100 bg-white">
+            <Button
+              variant="brandOutline"
+              className="w-full"
               onClick={() => setShowAll(!showAll)}
             >
-              {showAll ? "Show Less" : "View All"}
-            </button>
+              {showAll ? "Show Less" : "View More"}
+            </Button>
           </div>
         )}
       </CardContent>

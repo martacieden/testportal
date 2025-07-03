@@ -60,20 +60,20 @@ export default function ProjectsList({ onProjectClick }: ProjectsListProps) {
           {/* Action Bar */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" style={{ borderColor: "#F1F3F4", color: "#636466" }}>
+              <Button variant="outline" size="sm">
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
               </Button>
-              <Button variant="outline" size="sm" style={{ borderColor: "#F1F3F4", color: "#636466" }}>
+              <Button variant="outline" size="sm">
                 <Search className="h-4 w-4 mr-2" />
                 Search
               </Button>
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" style={{ borderColor: "#F1F3F4", color: "#636466" }}>
+              <Button variant="outline" size="sm">
                 + New update
               </Button>
-              <Button size="sm" style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>
+              <Button size="sm" variant="brand">
                 + New project
               </Button>
             </div>
@@ -84,29 +84,28 @@ export default function ProjectsList({ onProjectClick }: ProjectsListProps) {
         <div className="grid gap-6 md:grid-cols-2">
           {/* Estate Planning Card */}
           <div
-            className="p-6 rounded-lg shadow-sm border cursor-pointer"
-            style={{ backgroundColor: "#FFFFFF", borderColor: "#F1F3F4" }}
+            className="p-6 rounded-lg shadow-sm border border-neutral-200 cursor-pointer bg-white"
             onClick={() => onProjectClick?.("1")}
           >
             <div className="flex items-start justify-between mb-4">
-              <h3 className="text-lg font-semibold" style={{ color: "#063852" }}>
+              <h3 className="text-lg font-semibold text-text-primary">
                 {project.name}
               </h3>
               <Button variant="ghost" size="sm">
-                <MoreHorizontal className="h-4 w-4" style={{ color: "#636466" }} />
+                <MoreHorizontal className="h-4 w-4 text-text-tertiary" />
               </Button>
             </div>
-            <p className="text-sm mb-4" style={{ color: "#636466" }}>
+            <p className="text-sm mb-4 text-text-secondary">
               {project.description}
             </p>
-            <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+            <div className="w-full bg-neutral-200 rounded-full h-2 mb-2">
               <div className="h-2 rounded-full flex">
                 <div className="h-2 rounded-l-full" style={{ width: "53%", backgroundColor: "#10B981" }}></div>
                 <div className="h-2" style={{ width: "41%", backgroundColor: "#1E9ADF" }}></div>
                 <div className="h-2 rounded-r-full" style={{ width: "6%", backgroundColor: "#E5E7EB" }}></div>
               </div>
             </div>
-            <div className="flex items-center space-x-4 text-xs" style={{ color: "#636466" }}>
+            <div className="flex items-center space-x-4 text-xs text-text-tertiary">
               <div className="flex items-center space-x-1">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#10B981" }}></div>
                 <span>Completed: 9</span>
@@ -122,23 +121,22 @@ export default function ProjectsList({ onProjectClick }: ProjectsListProps) {
             </div>
             <div className="flex items-center justify-between mt-2">
               <div className="flex items-center space-x-2 flex-1 min-w-0">
-                <span className="text-sm whitespace-nowrap" style={{ color: "#636466" }}>
+                <span className="text-sm whitespace-nowrap text-text-tertiary">
                   Recent update:
                 </span>
                 <Avatar className="w-6 h-6">
                   <AvatarImage src={project.avatars[2]} alt="JF" />
                   <AvatarFallback>JF</AvatarFallback>
                 </Avatar>
-                <span className="text-sm truncate" style={{ color: "#636466" }}>
+                <span className="text-sm truncate text-text-tertiary">
                   We've completed a comprehensive review of the SLAT tru...
                 </span>
               </div>
               <div
-                className="flex items-center space-x-1 px-2 py-1 rounded border flex-shrink-0 ml-2"
-                style={{ backgroundColor: "#F8F9FA", borderColor: "#E5E7EB" }}
+                className="flex items-center space-x-1 px-2 py-1 rounded border flex-shrink-0 ml-2 bg-neutral-50 border-neutral-200"
               >
-                <MessageSquare className="h-4 w-4" style={{ color: "#636466" }} />
-                <span className="text-sm whitespace-nowrap" style={{ color: "#636466" }}>
+                <MessageSquare className="h-4 w-4 text-text-tertiary" />
+                <span className="text-sm whitespace-nowrap text-text-tertiary">
                   2 new
                 </span>
               </div>
@@ -146,31 +144,31 @@ export default function ProjectsList({ onProjectClick }: ProjectsListProps) {
           </div>
 
           {/* Spousal Lifetime Access Trust Card */}
-          <div className="p-6 rounded-lg shadow-sm border" style={{ backgroundColor: "#FFFFFF", borderColor: "#F1F3F4" }}>
+          <div className="p-6 rounded-lg shadow-sm border border-neutral-200 bg-white">
             <div className="flex items-start justify-between mb-4">
-              <h3 className="text-lg font-semibold" style={{ color: "#063852" }}>
+              <h3 className="text-lg font-semibold text-text-primary">
                 Spousal Lifetime Access Trust
               </h3>
               <Button variant="ghost" size="sm">
-                <MoreHorizontal className="h-4 w-4" style={{ color: "#636466" }} />
+                <MoreHorizontal className="h-4 w-4 text-text-tertiary" />
               </Button>
             </div>
 
-            <p className="text-sm mb-4" style={{ color: "#636466" }}>
+            <p className="text-sm mb-4 text-text-secondary">
               This project aims to establish a Spousal Lifetime Access Trust (SLAT) as a strategic estate planning vehicle
               that balances tax efficiency with family access to assets. The SLAT will b...
             </p>
 
             {/* Progress Bar */}
             <div className="mb-4">
-              <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+              <div className="w-full bg-neutral-200 rounded-full h-2 mb-2">
                 <div className="h-2 rounded-full flex">
                   <div className="h-2 rounded-l-full" style={{ width: "53%", backgroundColor: "#10B981" }}></div>
                   <div className="h-2" style={{ width: "41%", backgroundColor: "#1E9ADF" }}></div>
                   <div className="h-2 rounded-r-full" style={{ width: "6%", backgroundColor: "#E5E7EB" }}></div>
                 </div>
               </div>
-              <div className="flex items-center space-x-4 text-xs" style={{ color: "#636466" }}>
+              <div className="flex items-center space-x-4 text-xs text-text-tertiary">
                 <div className="flex items-center space-x-1">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#10B981" }}></div>
                   <span>Completed: 9</span>
@@ -188,24 +186,23 @@ export default function ProjectsList({ onProjectClick }: ProjectsListProps) {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 flex-1 min-w-0">
-                <span className="text-sm whitespace-nowrap" style={{ color: "#636466" }}>
+                <span className="text-sm whitespace-nowrap text-text-tertiary">
                   Recent update:
                 </span>
                 <Avatar className="w-6 h-6">
                   <AvatarImage src="https://randomuser.me/api/portraits/men/32.jpg" alt="SC" />
                   <AvatarFallback>SC</AvatarFallback>
                 </Avatar>
-                <span className="text-sm truncate" style={{ color: "#636466" }}>
+                <span className="text-sm truncate text-text-tertiary">
                   SLAT Trust Document Review Completed
                 </span>
               </div>
               <div
-                className="flex items-center space-x-1 px-2 py-1 rounded border flex-shrink-0 ml-2"
-                style={{ backgroundColor: "#F8F9FA", borderColor: "#E5E7EB" }}
+                className="flex items-center space-x-1 px-2 py-1 rounded border flex-shrink-0 ml-2 bg-neutral-50 border-neutral-200"
               >
-                <MessageSquare className="h-4 w-4" style={{ color: "#636466" }} />
-                <span className="text-sm whitespace-nowrap" style={{ color: "#636466" }}>
-                  2 new
+                <MessageSquare className="h-4 w-4 text-text-tertiary" />
+                <span className="text-sm whitespace-nowrap text-text-tertiary">
+                  1 new
                 </span>
               </div>
             </div>

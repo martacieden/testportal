@@ -38,12 +38,12 @@ export function WidgetManagementSlidePanel() {
   return (
     <>
       <Button
-        variant="outline"
-        className="justify-start h-10 border hover:shadow-md transition-all duration-200"
-        style={{ borderColor: "#1E9ADF", color: "#063852" }}
+        variant="brandOutline"
+        size="sm"
+        className="justify-start h-9"
         onClick={() => setIsManaging(true)}
       >
-        <Settings className="h-4 w-4 mr-2" style={{ color: "#1E9ADF" }} />
+        <Settings className="h-4 w-4 mr-2" />
         <span>Manage Widgets</span>
       </Button>
 

@@ -188,7 +188,7 @@ export function TaskAutomation({ documentId, documentName, documentSummary }: Ta
         <CardTitle className="flex items-center gap-2">
           <Zap className="h-5 w-5" />
           Task Automation
-          <Badge variant="secondary" className="ml-auto">
+          <Badge variant="secondary" className="ml-2 md:ml-4">
             <Target className="h-3 w-3 mr-1" />
             Workflow Engine
           </Badge>

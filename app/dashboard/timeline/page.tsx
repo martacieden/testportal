@@ -210,18 +210,18 @@ const sampleTimelineData = [
 
 export default function TimelinePage() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedStatus, setSelectedStatus] = useState("all")
-  const [selectedType, setSelectedType] = useState("all")
   const [showFilters, setShowFilters] = useState(false)
+  const [selectedType, setSelectedType] = useState<string>("all")
+  const [selectedStatus, setSelectedStatus] = useState<string>("all")
 
   const filteredData = sampleTimelineData.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.user.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = selectedStatus === "all" || item.status === selectedStatus
+                         item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
     const matchesType = selectedType === "all" || item.type === selectedType
+    const matchesStatus = selectedStatus === "all" || item.status === selectedStatus
     
-    return matchesSearch && matchesStatus && matchesType
+    return matchesSearch && matchesType && matchesStatus
   })
 
   const stats = {
@@ -233,160 +233,107 @@ export default function TimelinePage() {
 
   return (
     <DashboardLayout>
-      <div className="flex min-h-screen bg-gray-50">
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col">
-          {/* Header */}
-          <div className="bg-white border-b border-gray-200 px-6 py-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Project Timeline</h1>
-                <p className="text-gray-600 mt-1">Track all project activities and milestones</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm">
-                  <Download className="w-4 h-4 mr-2" />
-                  Export
-                </Button>
-                <Button size="sm">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Activity
-                </Button>
-              </div>
-            </div>
-          </div>
+      <div className="space-y-6">
+        {/* Page Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-text-primary mb-2">
+            Timeline
+          </h1>
+          <p className="text-text-secondary">
+            Track the progress of your financial planning journey and view all activities.
+          </p>
+        </div>
 
-          {/* Content */}
-          <div className="flex-1 flex">
-            {/* Filters Sidebar */}
-            <div className="w-80 bg-white border-r border-gray-200 p-6">
-              <div className="space-y-6">
-                {/* Search */}
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Search</h3>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <Input
-                      placeholder="Search activities..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* Breadcrumb */}
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Timeline</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
+          {/* Search and Filter Controls */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                    placeholder="Search timeline..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
                 </div>
-
-                {/* Quick Stats */}
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Overview</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <span className="text-sm text-gray-600">Total Activities</span>
-                      <Badge variant="secondary">{stats.total}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg">
-                      <span className="text-sm text-emerald-700">Completed</span>
-                      <Badge className="bg-emerald-100 text-emerald-800">{stats.completed}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                      <span className="text-sm text-blue-700">In Progress</span>
-                      <Badge className="bg-blue-100 text-blue-800">{stats.inProgress}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
-                      <span className="text-sm text-amber-700">Pending</span>
-                      <Badge className="bg-amber-100 text-amber-800">{stats.pending}</Badge>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Filters */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-semibold text-gray-900">Filters</h3>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowFilters(!showFilters)}
-                      className="h-6 w-6 p-0"
-                    >
-                      {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </Button>
-                  </div>
+                
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="flex items-center gap-2"
+                  >
+                    <Filter className="h-4 w-4" />
+                    Filters
+                    {showFilters ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  </Button>
                   
-                  {showFilters && (
-                    <div className="space-y-4">
-                      {/* Status Filter */}
-                      <div>
-                        <label className="text-xs font-medium text-gray-700 mb-2 block">Status</label>
-                        <div className="space-y-2">
-                          {[
-                            { value: 'all', label: 'All Statuses', count: stats.total },
-                            { value: 'completed', label: 'Completed', count: stats.completed },
-                            { value: 'in-progress', label: 'In Progress', count: stats.inProgress },
-                            { value: 'pending', label: 'Pending', count: stats.pending }
-                          ].map((status) => (
-                            <label key={status.value} className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="radio"
-                                name="status"
-                                value={status.value}
-                                checked={selectedStatus === status.value}
-                                onChange={(e) => setSelectedStatus(e.target.value)}
-                                className="w-4 h-4 text-blue-600"
-                              />
-                              <span className="text-sm text-gray-700">{status.label}</span>
-                              <Badge variant="secondary" className="ml-auto text-xs">{status.count}</Badge>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Type Filter */}
-                      <div>
-                        <label className="text-xs font-medium text-gray-700 mb-2 block">Type</label>
-                        <div className="space-y-2">
-                          {[
-                            { value: 'all', label: 'All Types', count: stats.total },
-                            { value: 'update', label: 'Updates', count: sampleTimelineData.filter(i => i.type === 'update').length },
-                            { value: 'decision', label: 'Decisions', count: sampleTimelineData.filter(i => i.type === 'decision').length },
-                            { value: 'meeting', label: 'Meetings', count: sampleTimelineData.filter(i => i.type === 'meeting').length },
-                            { value: 'document', label: 'Documents', count: sampleTimelineData.filter(i => i.type === 'document').length },
-                            { value: 'milestone', label: 'Milestones', count: sampleTimelineData.filter(i => i.type === 'milestone').length }
-                          ].map((type) => (
-                            <label key={type.value} className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="radio"
-                                name="type"
-                                value={type.value}
-                                checked={selectedType === type.value}
-                                onChange={(e) => setSelectedType(e.target.value)}
-                                className="w-4 h-4 text-blue-600"
-                              />
-                              <span className="text-sm text-gray-700">{type.label}</span>
-                              <Badge variant="secondary" className="ml-auto text-xs">{type.count}</Badge>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <Download className="h-4 w-4" />
+                    Export
+                  </Button>
                 </div>
               </div>
-            </div>
 
-            {/* Timeline Content */}
-            <div className="flex-1 p-6">
-              <div className="max-w-4xl mx-auto">
-                <ExpandedTimeline 
-                  items={filteredData}
-                  title="Project Activities"
-                  showFilters={false}
-                  maxItems={10}
-                />
-              </div>
-            </div>
-          </div>
+              {/* Filter Options */}
+              {showFilters && (
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="flex flex-wrap gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                      <select
+                        value={selectedType}
+                        onChange={(e) => setSelectedType(e.target.value)}
+                        className="border border-gray-300 rounded-md px-3 py-1 text-sm"
+                      >
+                        <option value="all">All Types</option>
+                        <option value="milestone">Milestones</option>
+                        <option value="decision">Decisions</option>
+                        <option value="meeting">Meetings</option>
+                        <option value="update">Updates</option>
+                        <option value="document">Documents</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                      <select
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                        className="border border-gray-300 rounded-md px-3 py-1 text-sm"
+                      >
+                        <option value="all">All Status</option>
+                        <option value="completed">Completed</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="pending">Pending</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Timeline Content */}
+          <ExpandedTimeline items={filteredData} />
         </div>
       </div>
     </DashboardLayout>
-  );
+  )
 } 
