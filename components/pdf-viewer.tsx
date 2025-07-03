@@ -176,4 +176,18 @@ export function PDFViewer({ url, title = "Document" }: PDFViewerProps) {
       </CardContent>
     </Card>
   )
+}
+
+export function PDFPreview({ url }: { url: string }) {
+  return (
+    <div className="flex justify-center items-center w-full">
+      <Document
+        file={url}
+        loading={<div className="flex items-center justify-center h-64 text-gray-500">Loading PDF...</div>}
+        error={<div className="flex items-center justify-center h-64 text-red-500">Failed to load PDF</div>}
+      >
+        <Page pageNumber={1} width={700} renderTextLayer={false} renderAnnotationLayer={false} />
+      </Document>
+    </div>
+  )
 } 

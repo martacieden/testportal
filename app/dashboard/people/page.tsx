@@ -15,7 +15,8 @@ export default function PeoplePage() {
     email: '',
     phone: '',
     category: 'internal',
-    avatar: ''
+    avatar: '',
+    avatarUrl: '',
   })
   const [refresh, setRefresh] = useState(false)
 
@@ -31,9 +32,9 @@ export default function PeoplePage() {
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Pass the new person to PeopleList via handler (could be improved with context or lifting state)
-    window.dispatchEvent(new CustomEvent('add-person', { detail: { ...form } }))
-    setForm({ name: '', role: '', email: '', phone: '', category: 'internal', avatar: '' })
+    const avatar = form.avatar ? form.avatar : form.avatarUrl
+    window.dispatchEvent(new CustomEvent('add-person', { detail: { ...form, avatar } }))
+    setForm({ name: '', role: '', email: '', phone: '', category: 'internal', avatar: '', avatarUrl: '' })
     setOpen(false)
   }
 
@@ -78,7 +79,10 @@ export default function PeoplePage() {
                   <option value="family">Family</option>
                   <option value="external">External</option>
                 </select>
-                <input type="file" accept="image/*" onChange={handleAvatarUpload} className="w-full border rounded-md p-2" />
+                <div className="space-y-2">
+                  <input type="file" accept="image/*" onChange={handleAvatarUpload} className="w-full border rounded-md p-2" />
+                  <Input name="avatarUrl" placeholder="Or paste image URL (https://...)" value={form.avatarUrl || ''} onChange={handleFormChange} />
+                </div>
                 <DialogFooter>
                   <Button type="submit" variant="brand">Add</Button>
                 </DialogFooter>

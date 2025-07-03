@@ -349,7 +349,7 @@ export default function QuickActions({ onMenuClick, onSubmitRequest }: QuickActi
                     value={searchQuery}
                     onChange={handleSearchChange}
                     onFocus={handleSearchFocus}
-                    className="pl-10 h-9 text-sm border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                    className="pl-10 h-8 text-sm border-gray-200 focus:border-blue-500 focus:ring-blue-500 py-1"
                     autoComplete="off"
                   />
                 </div>
@@ -357,11 +357,11 @@ export default function QuickActions({ onMenuClick, onSubmitRequest }: QuickActi
             </div>
             
             <div className="flex items-center space-x-3">
-              {/* Notification Bell */}
-              <NotificationBell />
               {pathname === "/dashboard" && (
                 <WidgetManagementSlidePanel />
               )}
+              {/* Notification Bell */}
+              <NotificationBell />
             </div>
           </div>
         </div>

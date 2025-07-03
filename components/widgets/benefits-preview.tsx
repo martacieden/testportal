@@ -3,6 +3,7 @@ import { Star, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 const featuredBenefit = {
   title: "Dedicated Wealth Advisor",
@@ -16,36 +17,39 @@ const featuredBenefit = {
 };
 
 const BenefitsPreview = () => (
-  <div className="flex flex-wrap items-center gap-3 min-w-[280px] max-w-full px-2 py-1">
-    {/* Title and badges */}
-    <span className="font-semibold text-text-primary whitespace-nowrap">
-      {featuredBenefit.title}
-    </span>
-    <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-    <Badge variant="secondary" className="text-xs whitespace-nowrap">
-      {featuredBenefit.category}
-    </Badge>
-    <Badge variant="warning" className="text-xs whitespace-nowrap">
-      {featuredBenefit.priority} priority
-    </Badge>
-    <CheckCircle className="h-3 w-3 text-status-success" />
-    <Badge variant="success" className="text-xs whitespace-nowrap">
-      {featuredBenefit.status}
-    </Badge>
-    <Badge variant="outline" className="text-xs whitespace-nowrap">
-      {featuredBenefit.value}
-    </Badge>
-    {/* Description */}
-    <span className="text-xs text-text-secondary line-clamp-1 max-w-[200px]">
-      {featuredBenefit.description}
-    </span>
-    {/* Action */}
-    <Link href={featuredBenefit.actionLink} className="ml-auto">
-      <Button variant="brandOutline" size="sm" className="whitespace-nowrap">
-        {featuredBenefit.actionText}
-      </Button>
-    </Link>
-  </div>
+  <Card className="w-full">
+    <CardHeader className="pb-1 flex flex-col items-start px-3 pt-3">
+      <span className="font-semibold text-text-primary text-base block mb-1">
+        {featuredBenefit.title}
+      </span>
+      <div className="flex items-center gap-2 mb-2">
+        <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+        <Badge variant="secondary" className="text-xs whitespace-nowrap">
+          {featuredBenefit.category}
+        </Badge>
+        <Badge variant="warning" className="text-xs whitespace-nowrap">
+          {featuredBenefit.priority} priority
+        </Badge>
+        <CheckCircle className="h-3 w-3 text-status-success" />
+        <Badge variant="success" className="text-xs whitespace-nowrap">
+          {featuredBenefit.status}
+        </Badge>
+        <Badge variant="outline" className="text-xs whitespace-nowrap">
+          {featuredBenefit.value}
+        </Badge>
+      </div>
+    </CardHeader>
+    <CardContent className="pt-0 pb-3 px-3">
+      <p className="text-sm text-text-secondary mb-3">
+        {featuredBenefit.description} Enjoy personalized financial strategies, proactive support, and direct access to exclusive resources tailored to your goals.
+      </p>
+      <Link href={featuredBenefit.actionLink}>
+        <Button variant="brandOutline" size="sm">
+          {featuredBenefit.actionText}
+        </Button>
+      </Link>
+    </CardContent>
+  </Card>
 );
 
 export default BenefitsPreview; 

@@ -282,6 +282,7 @@ export default function DocumentsManager() {
                           {doc.uploadedBy.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
+                      <span className="text-sm text-text-primary font-medium">{doc.uploadedBy}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
@@ -341,6 +342,7 @@ export default function DocumentsManager() {
                           {doc.uploadedBy.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
+                      <span className="text-sm text-text-primary font-medium">{doc.uploadedBy}</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-sm text-text-secondary">{doc.lastAccessed}</TableCell>

@@ -3,6 +3,7 @@ import { Calendar, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 const latestAnnouncement = {
   id: 1,
@@ -19,44 +20,43 @@ const latestAnnouncement = {
 };
 
 const AnnouncementsPreview = () => (
-  <div className="flex flex-wrap items-center gap-3 min-w-[280px] max-w-full px-2 py-1">
-    {/* Title and badges */}
-    <span className="font-semibold text-text-primary whitespace-nowrap">
-      {latestAnnouncement.title}
-    </span>
-    <Badge variant="secondary" className="text-xs whitespace-nowrap">
-      {latestAnnouncement.category}
-    </Badge>
-    <Badge variant="warning" className="text-xs whitespace-nowrap">
-      {latestAnnouncement.priority} priority
-    </Badge>
-    {!latestAnnouncement.read && (
-      <Badge variant="info" className="text-xs whitespace-nowrap">
-        New
-      </Badge>
-    )}
-    {/* Meta info */}
-    <span className="flex items-center gap-1 text-xs text-text-tertiary whitespace-nowrap">
-      <Calendar className="h-3 w-3" />
-      {latestAnnouncement.date}
-      <Clock className="h-3 w-3 ml-2" />
-      {latestAnnouncement.time}
-    </span>
-    {/* Author */}
-    <span className="text-xs text-text-tertiary whitespace-nowrap">
-      by {latestAnnouncement.author}
-    </span>
-    {/* Description */}
-    <span className="text-xs text-text-secondary line-clamp-1 max-w-[200px]">
-      {latestAnnouncement.content}
-    </span>
-    {/* Action */}
-    <Link href={latestAnnouncement.actionLink} className="ml-auto">
-      <Button variant="brandOutline" size="sm" className="whitespace-nowrap">
-        {latestAnnouncement.actionText}
-      </Button>
-    </Link>
-  </div>
+  <Card className="w-full">
+    <CardHeader className="pb-1 flex flex-col items-start px-3 pt-3">
+      <span className="font-semibold text-text-primary text-base block mb-1">
+        {latestAnnouncement.title}
+      </span>
+      <div className="flex items-center gap-2 mb-2">
+        <Badge variant="secondary" className="text-xs whitespace-nowrap">
+          {latestAnnouncement.category}
+        </Badge>
+        <Badge variant="warning" className="text-xs whitespace-nowrap">
+          {latestAnnouncement.priority} priority
+        </Badge>
+        {!latestAnnouncement.read && (
+          <Badge variant="info" className="text-xs whitespace-nowrap">
+            New
+          </Badge>
+        )}
+      </div>
+      <div className="flex items-center gap-2 text-xs text-text-tertiary mb-2">
+        <Calendar className="h-3 w-3" />
+        {latestAnnouncement.date}
+        <Clock className="h-3 w-3 ml-2" />
+        {latestAnnouncement.time}
+        <span className="ml-2">by {latestAnnouncement.author}</span>
+      </div>
+    </CardHeader>
+    <CardContent className="pt-0 pb-3 px-3">
+      <p className="text-sm text-text-secondary mb-3">
+        {latestAnnouncement.content}
+      </p>
+      <Link href={latestAnnouncement.actionLink}>
+        <Button variant="brandOutline" size="sm">
+          {latestAnnouncement.actionText}
+        </Button>
+      </Link>
+    </CardContent>
+  </Card>
 );
 
 export default AnnouncementsPreview; 

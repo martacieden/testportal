@@ -15,7 +15,7 @@ interface Message {
   timestamp: string
 }
 
-export default function AIChatbot() {
+export default function AIChatbot({ alwaysOpen = false }: { alwaysOpen?: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -87,7 +87,7 @@ export default function AIChatbot() {
   return (
     <>
       {/* Chat Window */}
-      {isOpen && (
+      {(alwaysOpen || isOpen) && (
         <div className="fixed bottom-6 right-6 z-50 w-96 h-[500px]">
           <Card className="h-full shadow-xl border-0" style={{ backgroundColor: "#FFFFFF" }}>
             <CardHeader className="pb-3" style={{ backgroundColor: "#1E9ADF" }}>

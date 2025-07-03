@@ -228,7 +228,7 @@ export function ProjectOverviewWidget() {
   }
   
   return (
-    <Card className="shadow-sm border-0 bg-white">
+    <Card className="shadow-sm border-0 bg-white h-full">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold" style={{ color: "#063852" }}>My Projects</CardTitle>
@@ -320,11 +320,10 @@ export function ProjectOverviewWidget() {
                 {/* Expanded Details */}
                 {isExpanded && (
                   <div className="border-t border-gray-200 p-6 bg-gray-50">
-                    <div className="grid lg:grid-cols-2 gap-6">
-                      {/* Left Column - Overview */}
+                    <div className="grid grid-cols-1 gap-6">
                       <div className="space-y-4">
                         <div>
-                          <h4 className="font-semibold mb-2" style={{ color: "#063852" }}>Next Action</h4>
+                          <h4 className="mb-2 text-sm font-normal" style={{ color: "#063852" }}>Next Action</h4>
                           <div className="p-3 bg-blue-50 rounded-lg">
                             <div className="font-medium text-blue-900">{project.nextAction}</div>
                             <div className="text-sm text-blue-700 mt-1">
@@ -332,9 +331,8 @@ export function ProjectOverviewWidget() {
                             </div>
                           </div>
                         </div>
-
                         <div>
-                          <h4 className="font-semibold mb-2" style={{ color: "#063852" }}>Recent Updates</h4>
+                          <h4 className="mb-2 text-sm font-normal" style={{ color: "#063852" }}>Recent Updates</h4>
                           <div className="space-y-2">
                             {project.recentUpdates.map((update, index) => (
                               <div key={index} className="flex items-start gap-2 text-sm">
@@ -344,101 +342,6 @@ export function ProjectOverviewWidget() {
                             ))}
                           </div>
                         </div>
-
-                        <div>
-                          <h4 className="font-semibold mb-2" style={{ color: "#063852" }}>Project Advisor</h4>
-                          <div className="flex items-center gap-2 p-3 bg-white rounded-lg border">
-                            <Avatar className="w-8 h-8">
-                              <AvatarFallback className="text-xs" style={{ backgroundColor: "#1E9ADF", color: "#FFFFFF" }}>
-                                {project.advisor.split(" ").map(n => n[0]).join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <div className="font-medium" style={{ color: "#063852" }}>{project.advisor}</div>
-                              <div className="text-xs" style={{ color: "#636466" }}>Lead Advisor</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Right Column - Tasks */}
-                      <div>
-                        <h4 className="font-semibold mb-3 flex items-center" style={{ color: "#063852" }}>
-                          Tasks ({project.tasksCompleted}/{project.totalTasks} completed)
-                          <span className="ml-2 md:ml-4"></span>
-                        </h4>
-                        <div className="space-y-2">
-                          {project.tasks.map((task) => (
-                            <div
-                              key={task.id}
-                              className={cn(
-                                "p-3 rounded-lg border",
-                                task.completed 
-                                  ? "bg-green-50 border-green-200" 
-                                  : "bg-white border-gray-200"
-                              )}
-                            >
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    {task.completed ? (
-                                      <CheckCircle className="h-4 w-4 text-green-600" />
-                                    ) : (
-                                      <Clock className="h-4 w-4 text-gray-400" />
-                                    )}
-                                    <span className={cn(
-                                      "text-sm font-medium",
-                                      task.completed && "line-through text-gray-500"
-                                    )}>
-                                      {task.task}
-                                    </span>
-                                  </div>
-                                  <p className="text-xs text-muted-foreground mb-2">
-                                    {task.description}
-                                  </p>
-                                  <div className="flex items-center gap-4 text-xs">
-                                    <div className="flex items-center gap-1">
-                                      <User className="h-3 w-3" />
-                                      {task.assignee}
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                      <Calendar className="h-3 w-3" />
-                                      {formatDate(task.dueDate)}
-                                    </div>
-                                    <Badge 
-                                      variant="outline" 
-                                      className={cn("text-xs", priorityConfig[task.priority].color)}
-                                    >
-                                      {task.priority}
-                                    </Badge>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
-                      <div className="flex items-center gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            router.push(`/dashboard/projects/${project.id}`)
-                          }}
-                        >
-                          <MessageSquare className="h-4 w-4 mr-2" />
-                          View Full Project
-                        </Button>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
                       </div>
                     </div>
                   </div>

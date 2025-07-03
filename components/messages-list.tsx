@@ -155,16 +155,23 @@ type Message = {
 interface MessagesListProps {
   showNewMessageModal?: boolean
   setShowNewMessageModal?: (show: boolean) => void
+  messageCategories: any[]
+  messages: any[]
+  setMessages: (fn: (prev: any[]) => any[]) => void
+  onDeleteChatCategory: (categoryId: string) => void
 }
 
 export default function MessagesList({ 
   showNewMessageModal = false, 
-  setShowNewMessageModal = () => {} 
+  setShowNewMessageModal = () => {},
+  messageCategories,
+  messages,
+  setMessages,
+  onDeleteChatCategory
 }: MessagesListProps) {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [newMessage, setNewMessage] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
-  const [messages, setMessages] = useState(messagesData)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [messageToDelete, setMessageToDelete] = useState<number | null>(null)
   const [deleteType, setDeleteType] = useState<'message' | 'chat'>('message')
@@ -209,7 +216,11 @@ export default function MessagesList({
         msg.id === messageToDelete ? { ...msg, deleted: true } : msg
       ))
     } else if (deleteType === 'chat') {
-      setMessages([])
+      // Remove the selected category/chat from the parent
+      if (selectedCategory !== 'all') {
+        onDeleteChatCategory(selectedCategory)
+        setSelectedCategory('all')
+      }
     }
     setShowDeleteConfirm(false)
     setMessageToDelete(null)
@@ -335,14 +346,8 @@ export default function MessagesList({
                 }`}
                 onClick={() => setSelectedCategory("all")}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">General</span>
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {messages.length}
-                  </Badge>
+                <div className="flex items-center">
+                  <span className="text-sm font-medium">General</span>
                 </div>
               </div>
               
@@ -354,14 +359,8 @@ export default function MessagesList({
                   }`}
                   onClick={() => setSelectedCategory(category.id)}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <category.icon className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">{category.name}</span>
-                    </div>
-                    <Badge variant="secondary" className="text-xs">
-                      {category.count}
-                    </Badge>
+                  <div className="flex items-center">
+                    <span className="text-sm font-medium">{category.name}</span>
                   </div>
                 </div>
               ))}
@@ -401,27 +400,13 @@ export default function MessagesList({
           <CardContent className="p-0">
             {/* Messages */}
             <div className="h-96 overflow-y-auto p-4 space-y-4">
-              {searchedMessages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground gap-4">
-                  <MessageSquare className="h-10 w-10 text-brand-primary mb-2" />
-                  <div className="text-lg font-semibold">All messages in this conversation have been deleted.</div>
-                  <Button
-                    variant="brand"
-                    size="sm"
-                    onClick={() => setShowNewMessageModal(true)}
-                  >
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Start New Message
-                  </Button>
-                </div>
-              ) : (
+              {searchedMessages.length === 0 ? null : (
                 searchedMessages.map((message) => (
                   message.deleted ? (
                     <div key={message.id} className={`flex ${message.isOwn ? "justify-end" : "justify-start"}`}>
                       <div className="flex items-center justify-center w-full">
-                        <div className="flex flex-col items-center text-center text-muted-foreground gap-1 py-2 w-full">
-                          <MessageSquare className="h-5 w-5 text-brand-primary mb-1" />
-                          <span className="text-xs font-medium">This message was deleted.</span>
+                        <div className="flex flex-col items-center text-center gap-1 py-2 w-full bg-black rounded-lg">
+                          <span className="text-xs font-medium text-white">This message was deleted.</span>
                         </div>
                       </div>
                     </div>
@@ -454,7 +439,6 @@ export default function MessagesList({
                               )}
                             </div>
                           </div>
-                          
                           {/* Delete Button - Only show on user's own messages */}
                           {message.isOwn && (
                             <Button
@@ -593,10 +577,7 @@ export default function MessagesList({
                     <SelectContent>
                       {messageCategories.map((category) => (
                         <SelectItem key={category.id} value={category.id}>
-                          <div className="flex items-center space-x-2">
-                            <category.icon className="h-4 w-4" />
-                            <span>{category.name}</span>
-                          </div>
+                          <span>{category.name}</span>
                         </SelectItem>
                       ))}
                     </SelectContent>

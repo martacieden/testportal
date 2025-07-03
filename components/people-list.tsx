@@ -296,20 +296,20 @@ export default function PeopleList() {
                 {allPeople.map((person) => (
                   <Card key={`${person.category}-${person.id}`} className="hover:shadow-md transition-shadow">
                     <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="w-12 h-12">
-                            <AvatarImage src={person.avatar} alt={person.name} />
-                            <AvatarFallback>{person.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                          </Avatar>
-                          <div>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src={person.avatar} alt={person.name} />
+                          <AvatarFallback>{person.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex items-center gap-2">
                             <h3 className="font-semibold text-text-primary">{person.name}</h3>
-                            <p className="text-sm text-text-secondary">{person.role}</p>
+                            {person.category === 'internal' && 'availability' in person && getAvailabilityBadge(person.availability)}
+                            {person.category === 'external' && 'relationship' in person && getRelationshipBadge(person.relationship)}
+                            {person.category === 'family' && getCategoryBadge(person.category)}
                           </div>
+                          <p className="text-sm text-text-secondary">{person.role}</p>
                         </div>
-                        {person.category === 'internal' && 'availability' in person && getAvailabilityBadge(person.availability)}
-                        {person.category === 'external' && 'relationship' in person && getRelationshipBadge(person.relationship)}
-                        {person.category === 'family' && getCategoryBadge(person.category)}
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-3">
@@ -466,18 +466,18 @@ export default function PeopleList() {
                 {internalTeam.map((member) => (
                   <Card key={member.id} className="hover:shadow-md transition-shadow">
                     <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="w-12 h-12">
-                            <AvatarImage src={member.avatar} alt={member.name} />
-                            <AvatarFallback>{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                          </Avatar>
-                          <div>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src={member.avatar} alt={member.name} />
+                          <AvatarFallback>{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex items-center gap-2">
                             <h3 className="font-semibold text-text-primary">{member.name}</h3>
-                            <p className="text-sm text-text-secondary">{member.role}</p>
+                            {getAvailabilityBadge(member.availability)}
                           </div>
+                          <p className="text-sm text-text-secondary">{member.role}</p>
                         </div>
-                        {getAvailabilityBadge(member.availability)}
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-3">
@@ -737,18 +737,18 @@ export default function PeopleList() {
                 {externalPartners.map((partner) => (
                   <Card key={partner.id} className="hover:shadow-md transition-shadow">
                     <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="w-12 h-12">
-                            <AvatarImage src={partner.avatar} alt={partner.name} />
-                            <AvatarFallback>{partner.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                          </Avatar>
-                          <div>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src={partner.avatar} alt={partner.name} />
+                          <AvatarFallback>{partner.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex items-center gap-2">
                             <h3 className="font-semibold text-text-primary">{partner.name}</h3>
-                            <p className="text-sm text-text-secondary">{partner.role}</p>
+                            {getRelationshipBadge(partner.relationship)}
                           </div>
+                          <p className="text-sm text-text-secondary">{partner.role}</p>
                         </div>
-                        {getRelationshipBadge(partner.relationship)}
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-3">
